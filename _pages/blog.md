@@ -7,4 +7,5 @@ nav: true
 nav_order: 3
 pagination:
   enabled: true
+  category: notes
 ---
