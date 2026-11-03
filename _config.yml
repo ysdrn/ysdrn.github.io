@@ -257,8 +257,8 @@ display_categories: []
 # -----------------------------------------------------------------------------
 
 scholar:
-  last_name: [Yoshida, 吉田]
-  first_name: [Ren, R., 廉]
+  last_name: [Yoshida, 吉田廉]
+  first_name: [Ren, R.]
 
   style: apa
   locale: en
