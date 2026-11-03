@@ -1,0 +1,14 @@
+title: 吉田廉
+description: 東京大学 哲学研究室
+url: "https://ysdrn.github.io"
+baseurl: ""
+
+markdown: kramdown
+kramdown:
+  input: GFM
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default

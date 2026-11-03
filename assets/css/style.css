@@ -1,0 +1,191 @@
+:root {
+  --text: #1a1a1a;
+  --text-secondary: #555;
+  --bg: #fff;
+  --bg-alt: #f7f7f7;
+  --accent: #2c5282;
+  --border: #e2e2e2;
+  --max-width: 720px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #e0e0e0;
+    --text-secondary: #aaa;
+    --bg: #1a1a1a;
+    --bg-alt: #242424;
+    --accent: #6ba3d6;
+    --border: #333;
+  }
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.75;
+  font-size: 16px;
+}
+
+header {
+  border-bottom: 1px solid var(--border);
+}
+
+nav {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.site-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nav-links a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: var(--accent);
+}
+
+main {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+footer {
+  border-top: 1px solid var(--border);
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 1.5rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+h1 { font-size: 1.6rem; margin-bottom: 1rem; font-weight: 700; }
+h2 { font-size: 1.2rem; margin-top: 2.5rem; margin-bottom: 0.75rem; font-weight: 700; }
+h3 { font-size: 1rem; margin-top: 1.5rem; margin-bottom: 0.5rem; font-weight: 700; }
+
+p { margin-bottom: 1rem; }
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+ul, ol { margin-bottom: 1rem; padding-left: 1.5rem; }
+li { margin-bottom: 0.25rem; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+
+th, td {
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+th {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.profile {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+
+.profile-text { flex: 1; }
+
+.profile-text h1 {
+  margin-bottom: 0.25rem;
+}
+
+.affiliation {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+.links {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+}
+
+.pub-year {
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.pub-item {
+  margin-bottom: 1rem;
+  padding-left: 0;
+}
+
+.pub-item .title {
+  font-weight: 600;
+}
+
+.pub-item .venue {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.pub-item .authors {
+  font-size: 0.9rem;
+}
+
+.talk-item {
+  margin-bottom: 1rem;
+}
+
+.talk-item .date {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  vertical-align: middle;
+}
+
+@media (max-width: 600px) {
+  .profile { flex-direction: column; }
+  nav { padding: 0.75rem 1rem; }
+  main { padding: 1.5rem 1rem 3rem; }
+}
