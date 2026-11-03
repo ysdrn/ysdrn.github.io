@@ -25,3 +25,10 @@
 @use "tabs";
 @use "teachings";
 @use "typograms";
+
+.navbar-brand {
+  font-weight: normal !important;
+  .first-name {
+    font-weight: normal !important;
+  }
+}
