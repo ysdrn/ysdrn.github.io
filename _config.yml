@@ -2,13 +2,20 @@ title: 吉田廉
 description: 東京大学 哲学研究室
 url: "https://ysdrn.github.io"
 baseurl: ""
+lang: ja
 
 markdown: kramdown
 kramdown:
   input: GFM
+
+permalink: /blog/:year/:month/:title/
 
 defaults:
   - scope:
       path: ""
     values:
       layout: default
+  - scope:
+      path: "_posts"
+    values:
+      layout: post
