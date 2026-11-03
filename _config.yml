@@ -132,6 +132,9 @@ collections:
     defaults:
       layout: post
     output: true
+  diary:
+    output: true
+    permalink: /diary/:year/:month/:day/:title/
 
 # -----------------------------------------------------------------------------
 # Jekyll settings
@@ -216,6 +219,10 @@ defaults:
       path: "assets"
     values:
       sitemap: false
+  - scope:
+      type: "diary"
+    values:
+      layout: post
 
 sass:
   style: compressed
