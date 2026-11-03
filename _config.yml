@@ -83,7 +83,7 @@ max_width: 930px
 
 serve_og_meta: true
 serve_schema_org: true
-og_image:
+og_image: /assets/img/og-default.png
 
 # -----------------------------------------------------------------------------
 # Analytics
