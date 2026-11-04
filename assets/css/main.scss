@@ -39,11 +39,18 @@
   }
 }
 
+// Diary: match note.com content width (620px container, 40px padding = 540px content)
+.diary-content {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 0 40px;
+  box-sizing: border-box;
+}
+
 // Amazon card (note.com style)
 .amazon-card {
   display: table;
   width: 100%;
-  max-width: 540px;
   border: 1px solid var(--global-divider-color);
   border-radius: 8px;
   overflow: hidden;
@@ -149,6 +156,9 @@ html[data-theme="dark"] {
 }
 
 @media (max-width: 480px) {
+  .diary-content {
+    padding: 0 16px;
+  }
   .amazon-card {
     display: block;
   }
