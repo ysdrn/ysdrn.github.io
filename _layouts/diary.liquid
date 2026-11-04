@@ -7,7 +7,50 @@ layout: default
 {% assign start_month = start_ts | date: "%m" %}
 {% assign end_month = end_ts | date: "%m" %}
 
+{% assign sorted_diary = site.diary | sort: "date" %}
+{% assign prev_entry = nil %}
+{% assign next_entry = nil %}
+{% for entry in sorted_diary %}
+  {% if entry.url == page.url %}
+    {% assign current_index = forloop.index0 %}
+  {% endif %}
+{% endfor %}
+{% for entry in sorted_diary %}
+  {% if forloop.index0 == current_index | minus: 1 %}
+    {% assign prev_entry = entry %}
+  {% endif %}
+  {% if forloop.index0 == current_index | plus: 1 %}
+    {% assign next_entry = entry %}
+  {% endif %}
+{% endfor %}
+
 <div class="post diary-content">
+  <nav class="diary-nav">
+    {% if prev_entry %}
+      {% assign prev_ts = prev_entry.date | date: "%s" | plus: 0 %}
+      {% assign prev_end = prev_ts | plus: 518400 %}
+      {% assign prev_sm = prev_ts | date: "%m" %}
+      {% assign prev_em = prev_end | date: "%m" %}
+      <a href="{{ prev_entry.url | relative_url }}" class="diary-nav-prev">
+        ← {% if prev_sm == prev_em %}{{ prev_ts | date: "%m/%d" }}–{{ prev_end | date: "%d" }}{% else %}{{ prev_ts | date: "%m/%d" }}–{{ prev_end | date: "%m/%d" }}{% endif %}
+      </a>
+    {% else %}
+      <span class="diary-nav-prev"></span>
+    {% endif %}
+    <a href="{{ '/diary/' | relative_url }}" class="diary-nav-index">diary</a>
+    {% if next_entry %}
+      {% assign next_ts = next_entry.date | date: "%s" | plus: 0 %}
+      {% assign next_end = next_ts | plus: 518400 %}
+      {% assign next_sm = next_ts | date: "%m" %}
+      {% assign next_em = next_end | date: "%m" %}
+      <a href="{{ next_entry.url | relative_url }}" class="diary-nav-next">
+        {% if next_sm == next_em %}{{ next_ts | date: "%m/%d" }}–{{ next_end | date: "%d" }}{% else %}{{ next_ts | date: "%m/%d" }}–{{ next_end | date: "%m/%d" }}{% endif %} →
+      </a>
+    {% else %}
+      <span class="diary-nav-next"></span>
+    {% endif %}
+  </nav>
+
   <header class="post-header">
     <h1 class="post-title">
       {%- if start_month == end_month -%}
@@ -16,6 +59,7 @@ layout: default
         {{ start_ts | date: "%Y/%m/%d" }}–{{ end_ts | date: "%m/%d" }}
       {%- endif -%}
     </h1>
+    <p class="diary-posted">{% if page.posted %}{{ page.posted }}{% else %}{{ page.date | date: "%Y年%-m月%-d日" }}{% endif %}</p>
     {% if page.description and page.description != "" %}
       <p class="post-description">{{ page.description }}</p>
     {% endif %}
@@ -30,4 +74,30 @@ layout: default
       {{ day }}
     {% endfor %}
   </article>
+
+  <nav class="diary-nav diary-nav-bottom">
+    {% if prev_entry %}
+      {% assign prev_ts = prev_entry.date | date: "%s" | plus: 0 %}
+      {% assign prev_end = prev_ts | plus: 518400 %}
+      {% assign prev_sm = prev_ts | date: "%m" %}
+      {% assign prev_em = prev_end | date: "%m" %}
+      <a href="{{ prev_entry.url | relative_url }}" class="diary-nav-prev">
+        ← {% if prev_sm == prev_em %}{{ prev_ts | date: "%m/%d" }}–{{ prev_end | date: "%d" }}{% else %}{{ prev_ts | date: "%m/%d" }}–{{ prev_end | date: "%m/%d" }}{% endif %}
+      </a>
+    {% else %}
+      <span class="diary-nav-prev"></span>
+    {% endif %}
+    <a href="{{ '/diary/' | relative_url }}" class="diary-nav-index">diary</a>
+    {% if next_entry %}
+      {% assign next_ts = next_entry.date | date: "%s" | plus: 0 %}
+      {% assign next_end = next_ts | plus: 518400 %}
+      {% assign next_sm = next_ts | date: "%m" %}
+      {% assign next_em = next_end | date: "%m" %}
+      <a href="{{ next_entry.url | relative_url }}" class="diary-nav-next">
+        {% if next_sm == next_em %}{{ next_ts | date: "%m/%d" }}–{{ next_end | date: "%d" }}{% else %}{{ next_ts | date: "%m/%d" }}–{{ next_end | date: "%m/%d" }}{% endif %} →
+      </a>
+    {% else %}
+      <span class="diary-nav-next"></span>
+    {% endif %}
+  </nav>
 </div>
