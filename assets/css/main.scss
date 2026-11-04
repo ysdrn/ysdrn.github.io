@@ -29,3 +29,10 @@
 .font-weight-bold {
   font-weight: inherit !important;
 }
+
+#search-toggle .nav-link {
+  font-size: 0;
+}
+#search-toggle .nav-link i {
+  font-size: 1rem;
+}

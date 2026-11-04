@@ -1,1 +1,0 @@
-// Shortcut key display disabled
