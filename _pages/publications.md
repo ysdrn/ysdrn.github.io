@@ -2,7 +2,7 @@
 layout: page
 permalink: /publications/
 title: works
-description: 業績一覧（年代順）
+description:
 nav: true
 nav_order: 2
 ---
