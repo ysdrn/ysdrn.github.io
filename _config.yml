@@ -223,6 +223,8 @@ defaults:
       type: "diary"
     values:
       layout: diary
+      robots: "noindex, nofollow, noarchive, nosnippet, noimageindex"
+      sitemap: false
 
 sass:
   style: compressed
