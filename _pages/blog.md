@@ -2,6 +2,7 @@
 layout: page
 permalink: /blog/
 title: notes
+og_title: notes of Ren Yoshida
 nav: true
 nav_order: 3
 pagination:

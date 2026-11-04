@@ -1,6 +1,7 @@
 ---
 layout: about
 title: about
+og_title: website of Ren Yoshida
 permalink: /
 subtitle:
 
