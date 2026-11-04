@@ -71,8 +71,8 @@
   <meta property="og:locale" content="{{ site.lang }}">
 
   <!-- Twitter card -->
-  {%- comment -%} Local override of the theme include: large-image card instead of the small summary thumbnail. {%- endcomment -%}
-  <meta name="twitter:card" content="summary_large_image">
+  {%- comment -%} Local override of the theme include (see og_title above). Keep the small "summary" card: the owner does not want the large image. {%- endcomment -%}
+  <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="{% if page.og_title %}{{ page.og_title }}{% elsif page.title %}{{ page.title }}{% else %}{{ title }}{% endif %}">
   <meta name="twitter:description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
   {% if page.og_image or site.og_image %}
