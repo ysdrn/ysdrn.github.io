@@ -13,12 +13,16 @@
 #
 # キャッシュにない URL は、URL のスラッグから推定した商品名と（書籍なら）ISBN から
 # 引ける旧式の書影 URL で簡易カードにし、ビルドログに警告を出す。
+# amzn.to などの短縮 URL がキャッシュにないときだけ、短縮サービス（bit.ly）に転送先を
+# 1 回聞いて ASIN とスラッグを得る。Amazon 本体には触らない。
 #
 # 価格は表示しない。Amazon アソシエイト参加要件 2(b) は、価格の表示を Amazon が
 # 提供するリンクか Creators API 経由のものに限っている（スクレイピングした価格は不可）。
 
 require 'json'
 require 'cgi'
+require 'net/http'
+require 'uri'
 
 module AmazonCard
   AMAZON_URL_RE = %r{^[ \t]*(https?://(?:www\.)?amazon\.co\.jp/[^\s<>]+|https?://amzn\.(?:to|asia)/[^\s<>]+|https?://link\.amazon(?:\.co\.jp)?/[^\s<>]+)[ \t]*$}
@@ -88,6 +92,27 @@ module AmazonCard
       [asin, cache['items'][asin]]
     end
 
+    # 短縮 URL の転送先を短縮サービスにだけ聞く（amazon.co.jp には進まない）。失敗したら nil
+    def resolve_short(url, hops = 2)
+      current = url
+      hops.times do
+        return current if current =~ /amazon\.co\.jp/
+        uri = URI(current)
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.use_ssl = (uri.scheme == 'https')
+        http.open_timeout = 5
+        http.read_timeout = 5
+        resp = http.request(Net::HTTP::Head.new(uri))
+        loc = resp['location']
+        return nil unless resp.is_a?(Net::HTTPRedirection) && loc
+        current = URI.join(current, loc).to_s
+      end
+      current =~ /amazon\.co\.jp/ ? current : nil
+    rescue StandardError => e
+      warn "AmazonCard: #{url} の転送先を取れない: #{e.message}"
+      nil
+    end
+
     def fallback_item(url, asin, resolved_url = nil)
       item = { 'asin' => asin, 'title' => title_from_url(resolved_url || url) || "Amazon.co.jp の商品（#{asin}）" }
       item['image'] = format(LEGACY_IMAGE, asin) if isbn10?(asin)
@@ -126,13 +151,20 @@ module AmazonCard
       content.gsub(AMAZON_URL_RE) do |match|
         url = $1
         asin, item = lookup(url, cache)
+        resolved = nil
+        if asin.nil? && short_url?(url)
+          resolved = resolve_short(url)
+          asin = extract_asin(resolved)
+          cache['links'][url] = asin if asin # このビルドの間だけ覚える（ファイルには書かない）
+          item = cache['items'][asin] if asin
+        end
         if asin.nil?
           missing << url
           next match
         end
         unless item
           missing << url
-          item = fallback_item(url, asin)
+          item = fallback_item(url, asin, resolved)
         end
         render_card(url, item)
       end
