@@ -113,6 +113,30 @@
   }
 }
 
+// Profile list on the about page (Location / Email / Twitter / Works)
+.profile-list {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  column-gap: 1rem;
+  row-gap: 0.25rem;
+  margin: 1.5rem 0;
+  font-size: 0.95rem;
+
+  dt {
+    font-style: italic;
+    font-weight: 600;
+    color: var(--global-text-color-light);
+  }
+  dd {
+    margin: 0;
+  }
+}
+
+// メールアドレスは @ を CSS で描く（本文テキストには含めない）
+.profile-email-at::before {
+  content: "@";
+}
+
 // Amazon card (note.com style)
 .amazon-card {
   display: table;

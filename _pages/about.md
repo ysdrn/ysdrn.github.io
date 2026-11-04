@@ -28,4 +28,13 @@ latest_posts:
 
 東京大学大学院人文社会系研究科博士課程単位取得満期退学（2025年12月）。修士（文学）。2022年から2025年まで日本学術振興会特別研究員DC1。現在は東京大学哲学研究室事務補佐員、東洋大学研究推進課研究支援者、三重大学非常勤講師。
 
-連絡先: [researchmap](https://researchmap.jp/yoshidaren)
+<dl class="profile-list">
+  <dt>Location</dt>
+  <dd>Tokyo</dd>
+  <dt>Email</dt>
+  <dd><span class="profile-email">aglossian<span class="profile-email-at"></span>icloud.com</span></dd>
+  <dt>Twitter</dt>
+  <dd><a href="https://twitter.com/aglossia_" rel="me noopener" target="_blank">twitter.com/aglossia_</a></dd>
+  <dt>Works</dt>
+  <dd><a href="https://researchmap.jp/yoshidaren" rel="me noopener" target="_blank">researchmap.jp/yoshidaren</a></dd>
+</dl>
