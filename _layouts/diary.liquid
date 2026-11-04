@@ -26,7 +26,7 @@ layout: default
     {% for day in days_content %}
       {% assign day_offset = forloop.index0 | times: 86400 %}
       {% assign day_ts = start_ts | plus: day_offset %}
-      <h2>{{ day_ts | date: "%Y/%m/%d" }} {{ day_ts | date: "%a" }}</h2>
+      <h2>{{ day_ts | date: "%m/%d" }} <small>{{ day_ts | date: "%a" }}</small></h2>
       {{ day }}
     {% endfor %}
   </article>
