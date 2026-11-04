@@ -132,6 +132,12 @@
 }
 
 // メールアドレスは @ を CSS で描く（本文テキストには含めない）
+// works: badge text. With _data/venues.yml the label is wrapped in a <div>,
+// which picks up the page text colour (black) instead of the badge's white.
+.publications ol.bibliography li .abbr abbr div {
+  color: inherit;
+}
+
 // works: cover image column on the right
 .publications ol.bibliography li .preview-col {
   padding-top: 0.25rem;
