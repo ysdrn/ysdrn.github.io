@@ -32,3 +32,9 @@
 #search-toggle .nav-link i {
   font-size: 1rem;
 }
+
+@media (min-width: 576px) {
+  #search-toggle {
+    transform: translateY(4px);
+  }
+}
