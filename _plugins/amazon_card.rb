@@ -1,192 +1,188 @@
-require 'net/http'
-require 'uri'
+# frozen_string_literal: true
+
+# Amazon アフィリエイトリンク → note.com 風カード
+#
+# 本文中で Amazon の URL（amazon.co.jp / amzn.to / amzn.asia）が 1 行に単独で
+# 置かれていると、ビルド時にカード HTML に置き換える。
+#
+# 商品名・著者・画像 URL は _data/amazon_cache.json から読むだけで、
+# ビルド中に Amazon へは一切アクセスしない（GitHub Actions のデータセンター IP は
+# Amazon の bot 対策で弾かれるため、ビルドが Amazon の機嫌に左右されないようにする）。
+# キャッシュは自分の Mac で `ruby bin/amazon_cache.rb` を実行して作り、git に入れる。
+# .githooks/pre-commit がこれを自動で行う（`git config core.hooksPath .githooks`）。
+#
+# キャッシュにない URL は、URL のスラッグから推定した商品名と（書籍なら）ISBN から
+# 引ける旧式の書影 URL で簡易カードにし、ビルドログに警告を出す。
+#
+# 価格は表示しない。Amazon アソシエイト参加要件 2(b) は、価格の表示を Amazon が
+# 提供するリンクか Creators API 経由のものに限っている（スクレイピングした価格は不可）。
+
 require 'json'
 require 'cgi'
-require 'fileutils'
 
 module AmazonCard
-  AMAZON_URL_RE = %r{^(https?://(?:www\.)?amazon\.co\.jp/[^\s]+|https?://amzn\.(?:to|asia)/[^\s]+|https?://link\.amazon(?:\.co\.jp)?/[^\s]+)$}
-
-  CACHE_FILE = '_data/amazon_cache.json'
+  AMAZON_URL_RE = %r{^[ \t]*(https?://(?:www\.)?amazon\.co\.jp/[^\s<>]+|https?://amzn\.(?:to|asia)/[^\s<>]+|https?://link\.amazon(?:\.co\.jp)?/[^\s<>]+)[ \t]*$}
+  SHORT_URL_RE  = %r{\Ahttps?://(?:amzn\.(?:to|asia)|link\.amazon(?:\.co\.jp)?)/}
+  CACHE_FILE    = '_data/amazon_cache.json'
+  # ISBN-10 を ASIN に持つ書籍だけが引ける旧式の書影エンドポイント（該当なしは 1x1 GIF）
+  LEGACY_IMAGE  = 'https://images-fe.ssl-images-amazon.com/images/P/%s.09._SL500_.jpg'
 
   class << self
-    def load_cache(site)
-      path = File.join(site.source, CACHE_FILE)
-      if File.exist?(path)
-        JSON.parse(File.read(path))
-      else
-        {}
-      end
+    # { 'items' => { asin => {...} }, 'links' => { short_url => asin } }
+    def load_cache(source)
+      path = File.join(source, CACHE_FILE)
+      return empty_cache unless File.exist?(path)
+
+      data = JSON.parse(File.read(path, encoding: "UTF-8"))
+      # 旧形式（asin => item のフラットな hash）を読めるようにしておく
+      data = { 'items' => data, 'links' => {} } unless data.key?('items')
+      data['links'] ||= {}
+      data
+    rescue JSON::ParserError => e
+      warn "AmazonCard: #{CACHE_FILE} を読めません: #{e.message}"
+      empty_cache
     end
 
-    def save_cache(site, cache)
-      path = File.join(site.source, CACHE_FILE)
-      FileUtils.mkdir_p(File.dirname(path))
-      File.write(path, JSON.pretty_generate(cache))
+    def empty_cache
+      { 'items' => {}, 'links' => {} }
+    end
+
+    def save_cache(source, cache)
+      path = File.join(source, CACHE_FILE)
+      sorted = {
+        'items' => cache['items'].sort.to_h,
+        'links' => cache['links'].sort.to_h,
+      }
+      File.write(path, JSON.pretty_generate(sorted) + "\n")
     end
 
     def extract_asin(url)
-      return $1 if url =~ %r{/dp/([A-Z0-9]{10})}i
-      return $1 if url =~ %r{/gp/product/([A-Z0-9]{10})}i
-      return $1 if url =~ %r{/([A-Z0-9]{10})(?:[/?]|$)}i
+      return unless url
+      return $1.upcase if url =~ %r{/dp/([A-Z0-9]{10})(?:[/?#]|$)}i
+      return $1.upcase if url =~ %r{/gp/product/([A-Z0-9]{10})(?:[/?#]|$)}i
+      return $1.upcase if url =~ %r{/gp/aw/d/([A-Z0-9]{10})(?:[/?#]|$)}i
+      return $1.upcase if url =~ %r{/exec/obidos/ASIN/([A-Z0-9]{10})(?:[/?#]|$)}i
       nil
     end
 
-    def extract_title_from_url(url)
-      if url =~ %r{amazon\.co\.jp/([^/]+)/dp/}
-        raw = $1
-        decoded = CGI.unescape(raw)
-        decoded.gsub('-', ' ').strip
-      end
+    def short_url?(url)
+      url =~ SHORT_URL_RE ? true : false
     end
 
-    def resolve_redirect(url, limit = 3)
-      return url if limit <= 0
-      uri = URI(url)
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = (uri.scheme == 'https')
-      http.open_timeout = 5
-      http.read_timeout = 5
-      req = Net::HTTP::Head.new(uri)
-      req['User-Agent'] = 'Mozilla/5.0'
-      resp = http.request(req)
-      if resp.is_a?(Net::HTTPRedirection) && resp['location']
-        resolve_redirect(resp['location'], limit - 1)
-      else
-        url
-      end
-    rescue => e
-      Jekyll.logger.warn "AmazonCard:", "Failed to resolve #{url}: #{e.message}"
-      url
+    def isbn10?(asin)
+      asin.to_s =~ /\A\d{9}[\dX]\z/ ? true : false
     end
 
-    def fetch_og_data(url)
-      uri = URI(url)
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = (uri.scheme == 'https')
-      http.open_timeout = 5
-      http.read_timeout = 10
-      req = Net::HTTP::Get.new(uri)
-      req['User-Agent'] = 'Mozilla/5.0 (compatible; JekyllBot/1.0)'
-      req['Accept-Language'] = 'ja'
-      resp = http.request(req)
-      body = resp.body.force_encoding('UTF-8')
-
-      data = {}
-      if body =~ /property="og:title"\s+content="([^"]+)"/
-        data['title'] = CGI.unescapeHTML($1)
-      end
-      if body =~ /property="og:image"\s+content="([^"]+)"/
-        data['image'] = $1
-      end
-      if body =~ /id="priceblock_ourprice"[^>]*>([^<]+)</
-        data['price'] = $1.strip
-      elsif body =~ /class="a-price-whole"[^>]*>([^<]+)</
-        data['price'] = $1.strip.sub(/\.$/, '')
-      end
-      data
-    rescue => e
-      Jekyll.logger.warn "AmazonCard:", "Failed to fetch #{url}: #{e.message}"
-      {}
+    # amazon.co.jp/<スラッグ>/dp/ASIN のスラッグから商品名を推定する（キャッシュ未作成時の保険）
+    def title_from_url(url)
+      return unless url =~ %r{amazon\.co\.jp/([^/?#]+)/dp/}
+      slug = CGI.unescape($1)
+      return if slug =~ /\A(gp|dp|exec|s|b|o)\z/i
+      slug.tr('-', ' ').strip
     end
 
-    def get_product_data(url, asin, cache)
-      return cache[asin] if cache[asin]
-
-      full_url = url
-      if url =~ /amzn\.(to|asia)|link\.amazon/
-        full_url = resolve_redirect(url)
-        new_asin = extract_asin(full_url)
-        asin = new_asin if new_asin
-        return cache[asin] if cache[asin]
-      end
-
-      data = { 'url' => url, 'asin' => asin }
-
-      title = extract_title_from_url(full_url)
-      data['title'] = title if title
-
-      og = fetch_og_data(full_url)
-      data['title'] = og['title'] if og['title']
-      data['image'] = og['image'] if og['image']
-      data['price'] = og['price'] if og['price']
-
-      data['image'] ||= "https://images-fe.ssl-images-amazon.com/images/P/#{asin}.09._SL500_.jpg"
-      data['title'] ||= asin
-
-      cache[asin] = data
-      data
+    # URL → [asin, item or nil]
+    def lookup(url, cache)
+      asin = extract_asin(url) || cache['links'][url]
+      return [nil, nil] unless asin
+      [asin, cache['items'][asin]]
     end
 
-    def render_card(data)
-      url = data['url'] || '#'
-      title = CGI.escapeHTML(data['title'] || '')
-      image = data['image']
-      price = data['price']
+    def fallback_item(url, asin, resolved_url = nil)
+      item = { 'asin' => asin, 'title' => title_from_url(resolved_url || url) || "Amazon.co.jp の商品（#{asin}）" }
+      item['image'] = format(LEGACY_IMAGE, asin) if isbn10?(asin)
+      item
+    end
 
-      img_html = if image
-        %(<a class="amazon-card-image" href="#{url}" rel="noopener nofollow" target="_blank">) +
-        %(<span style="background-image:url(#{image})"></span></a>)
-      else
-        ''
-      end
+    def render_card(url, item)
+      href   = CGI.escapeHTML(url)
+      title  = CGI.escapeHTML(item['title'].to_s)
+      author = item['author'].to_s.strip
+      image  = item['image']
 
-      price_html = if price
-        %(<div class="amazon-card-price"><em>#{CGI.escapeHTML(price)}<span class="amazon-card-currency">円</span></em></div>)
+      author_html = author.empty? ? '' : %(\n    <span class="amazon-card-author">#{CGI.escapeHTML(author)}</span>)
+      image_html = if image
+        %(\n  <a class="amazon-card-image" href="#{href}" rel="noopener nofollow sponsored" target="_blank">) +
+        %(<span style="background-image:url(#{CGI.escapeHTML(image)})"></span></a>)
       else
         ''
       end
 
       <<~HTML
         <div class="amazon-card">
-          <a class="amazon-card-body" href="#{url}" rel="noopener nofollow" target="_blank">
-            <strong class="amazon-card-title">#{title}</strong>
+          <a class="amazon-card-body" href="#{href}" rel="noopener nofollow sponsored" target="_blank">
+            <strong class="amazon-card-title">#{title}</strong>#{author_html}
             <span class="amazon-card-domain">amazon.co.jp</span>
-            #{price_html}
             <div class="amazon-card-button">
               <span class="amazon-card-button-label">Amazon.co.jpで購入する</span>
             </div>
-          </a>
-          #{img_html}
+          </a>#{image_html}
         </div>
       HTML
     end
 
-    def process_content(content, cache)
+    # 本文中の URL をカードに置換。missing には未キャッシュの URL が溜まる
+    def process_content(content, cache, missing = [])
       content.gsub(AMAZON_URL_RE) do |match|
-        url = $1.strip
-        asin = extract_asin(url)
-        unless asin
-          if url =~ /amzn\.(to|asia)|link\.amazon/
-            resolved = resolve_redirect(url)
-            asin = extract_asin(resolved)
-          end
+        url = $1
+        asin, item = lookup(url, cache)
+        if asin.nil?
+          missing << url
+          next match
         end
-        if asin
-          data = get_product_data(url, asin, cache)
-          render_card(data)
-        else
-          match
+        unless item
+          missing << url
+          item = fallback_item(url, asin)
         end
+        render_card(url, item)
       end
     end
   end
 end
 
-Jekyll::Hooks.register :documents, :pre_render do |doc|
-  next unless doc.content =~ AmazonCard::AMAZON_URL_RE
+if defined?(Jekyll)
+  module AmazonCard
+    @missing = {}
+    @cache = nil
 
-  cache = AmazonCard.load_cache(doc.site)
-  original_cache = cache.dup
-  doc.content = AmazonCard.process_content(doc.content, cache)
-  AmazonCard.save_cache(doc.site, cache) if cache != original_cache
-end
+    class << self
+      attr_reader :missing
 
-Jekyll::Hooks.register :posts, :pre_render do |post|
-  next unless post.content =~ AmazonCard::AMAZON_URL_RE
+      def site_cache(site)
+        @cache ||= load_cache(site.source)
+      end
 
-  cache = AmazonCard.load_cache(post.site)
-  original_cache = cache.dup
-  post.content = AmazonCard.process_content(post.content, cache)
-  AmazonCard.save_cache(post.site, cache) if cache != original_cache
+      def reset!
+        @cache = nil
+        @missing = {}
+      end
+
+      def note_missing(urls, path)
+        urls.each { |u| (@missing[u] ||= []) << path }
+      end
+    end
+  end
+
+  Jekyll::Hooks.register :site, :after_reset do |_site|
+    AmazonCard.reset!
+  end
+
+  convert = lambda do |doc, *_payload|
+    next unless doc.content && doc.content =~ AmazonCard::AMAZON_URL_RE
+
+    missing = []
+    doc.content = AmazonCard.process_content(doc.content, AmazonCard.site_cache(doc.site), missing)
+    AmazonCard.note_missing(missing, doc.relative_path) unless missing.empty?
+  end
+
+  Jekyll::Hooks.register :documents, :pre_render, &convert
+  Jekyll::Hooks.register :pages, :pre_render, &convert
+
+  Jekyll::Hooks.register :site, :post_write do |_site|
+    AmazonCard.missing.each do |url, paths|
+      msg = "Amazon カードのキャッシュがない: #{url}（#{paths.uniq.join(', ')}）。`ruby bin/amazon_cache.rb` を実行して commit してください"
+      Jekyll.logger.warn 'AmazonCard:', msg
+      puts "::warning file=#{paths.first}::#{msg}" if ENV['GITHUB_ACTIONS']
+    end
+  end
 end

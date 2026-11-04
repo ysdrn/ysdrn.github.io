@@ -145,28 +145,11 @@
   color: var(--global-text-color-light);
 }
 
-.amazon-card-price {
-  margin-top: 12px;
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 4px;
-
-  em {
-    font-style: normal;
-    font-size: 16px;
-    font-weight: 600;
-  }
-}
-
-.amazon-card-currency {
-  font-size: 14px;
-  font-weight: 400;
-}
-
-.amazon-card-update {
-  font-size: 12px;
+.amazon-card-author {
+  display: block;
+  font-size: 13px;
   color: var(--global-text-color-light);
+  margin-bottom: 2px;
 }
 
 .amazon-card-button {

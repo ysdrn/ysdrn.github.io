@@ -38,6 +38,8 @@ jobs:
           cache: "npm"
       - name: Install JS deps
         run: npm ci
+      - name: Check Amazon card cache
+        run: ruby bin/amazon_cache.rb --check --warn
       - name: Install and Build
         run: |
           sudo apt-get update && sudo apt-get install -y imagemagick

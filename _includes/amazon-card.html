@@ -1,17 +1,18 @@
+{%- comment -%}
+手動でカードを置くとき用。普段は本文に Amazon の URL を 1 行で貼れば _plugins/amazon_card.rb が自動でカードにする。
+{% include amazon-card.html url="https://amzn.to/xxxx" title="書名" author="著者" image="https://m.media-amazon.com/images/I/xxxx._SL500_.jpg" %}
+{%- endcomment -%}
 <div class="amazon-card">
-  <a class="amazon-card-body" href="{{ include.url }}" rel="noopener nofollow" target="_blank">
+  <a class="amazon-card-body" href="{{ include.url }}" rel="noopener nofollow sponsored" target="_blank">
     <strong class="amazon-card-title">{{ include.title }}</strong>
-    <span class="amazon-card-domain">amzn.to</span>
-    <div class="amazon-card-price">
-      <em>{{ include.price }}<span class="amazon-card-currency">円</span></em>
-      {% if include.date %}<span class="amazon-card-update">({{ include.date }}時点)</span>{% endif %}
-    </div>
+    {% if include.author %}<span class="amazon-card-author">{{ include.author }}</span>{% endif %}
+    <span class="amazon-card-domain">amazon.co.jp</span>
     <div class="amazon-card-button">
       <span class="amazon-card-button-label">Amazon.co.jpで購入する</span>
     </div>
   </a>
   {% if include.image %}
-  <a class="amazon-card-image" href="{{ include.url }}" rel="noopener nofollow" target="_blank">
+  <a class="amazon-card-image" href="{{ include.url }}" rel="noopener nofollow sponsored" target="_blank">
     <span style="background-image:url({{ include.image }})"></span>
   </a>
   {% endif %}
