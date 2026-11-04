@@ -1,6 +1,14 @@
 ---
 permalink: /robots.txt
 ---
+# X / Facebook のリンクカード用クローラーは全ページ可（検索エンジンではない。
+# ここで許可しないと /diary/ の URL を X に貼ってもサムネが出ない）
+User-agent: Twitterbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
 User-agent: *
 Disallow: /diary/
 
