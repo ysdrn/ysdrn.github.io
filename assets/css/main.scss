@@ -84,19 +84,31 @@
   margin-bottom: 1.5rem;
 }
 .diary-days-nav {
+  position: fixed;
+  left: calc(50% - 370px);
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.5rem 0;
-  font-size: 14px;
-  border-bottom: 1px solid var(--global-divider-color);
-  margin-bottom: 1.5rem;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
   a {
     text-decoration: none;
     color: var(--global-text-color-light);
-    padding: 2px 0;
     &:hover { color: var(--global-theme-color); }
-    small { display: block; font-size: 0.75em; text-align: center; }
+    small { margin-left: 4px; font-size: 0.85em; }
+  }
+}
+@media (max-width: 860px) {
+  .diary-days-nav {
+    position: static;
+    transform: none;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--global-divider-color);
+    margin-bottom: 1.5rem;
+    a small { display: block; margin-left: 0; text-align: center; }
   }
 }
 
