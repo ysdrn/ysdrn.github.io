@@ -18,6 +18,7 @@ url: https://ysdrn.github.io
 baseurl:
 last_updated: false
 back_to_top: true
+future: true
 
 # -----------------------------------------------------------------------------
 # Theme
