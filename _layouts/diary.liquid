@@ -61,7 +61,7 @@ layout: default
         {{ start_ts | date: "%Y/%m/%d" }}–{{ end_ts | date: "%m/%d" }}
       {%- endif -%}
     </h1>
-    <p class="diary-posted">{% if page.posted %}{{ page.posted }}{% else %}{{ page.date | date: "%Y年%-m月%-d日" }}{% endif %}</p>
+    <p class="diary-posted">{{ page.date | date: "%Y年%-m月%-d日" }}</p>
     {% if page.description and page.description != "" %}
       <p class="post-description">{{ page.description }}</p>
     {% endif %}
