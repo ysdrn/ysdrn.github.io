@@ -312,6 +312,16 @@
       {% if entry.website %}
         <a href="{{ entry.website }}" class="btn btn-sm z-depth-0" role="button">Website</a>
       {% endif %}
+      {%- comment -%}
+        Site-specific fields: publisher_url (publisher's or journal's page for the item)
+        and amazon (ASIN; linked with the Associates tag, so rel="sponsored").
+      {%- endcomment -%}
+      {% if entry.publisher_url %}
+        <a href="{{ entry.publisher_url }}" class="btn btn-sm z-depth-0" role="button" target="_blank" rel="noopener">出版社</a>
+      {% endif %}
+      {% if entry.amazon %}
+        <a href="https://www.amazon.co.jp/dp/{{ entry.amazon }}?tag=aglossian-22" class="btn btn-sm z-depth-0" role="button" target="_blank" rel="noopener nofollow sponsored">Amazon</a>
+      {% endif %}
     </div>
     {% if site.enable_publication_badges %}
       {% assign entry_has_altmetric_badge = false %}
