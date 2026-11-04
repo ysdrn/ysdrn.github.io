@@ -2,7 +2,7 @@
 layout: about
 title: about
 permalink: /
-subtitle: 東京大学 大学院人文社会系研究科 哲学研究室
+subtitle:
 
 profile:
   align: right
