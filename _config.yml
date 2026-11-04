@@ -370,7 +370,7 @@ enable_cookie_consent: false
 enable_masonry: false
 enable_math: false
 enable_tooltips: false
-enable_darkmode: true
+enable_darkmode: false
 enable_navbar_social: false
 enable_project_categories: false
 enable_medium_zoom: true

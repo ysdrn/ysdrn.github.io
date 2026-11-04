@@ -206,28 +206,6 @@
   }
 }
 
-// Dark mode: match note.com palette
-html[data-theme="dark"] {
-  --global-bg-color: #202a30;
-  --global-code-bg-color: #283038;
-  --global-card-bg-color: #283038;
-  --global-divider-color: rgba(255, 255, 255, 0.12);
-  --global-text-color-light: #a0a8b0;
-  --global-footer-bg-color: #e8e8e8;
-  --global-footer-text-color: #202a30;
-}
-@media (prefers-color-scheme: dark) {
-  html:not([data-theme="light"]) {
-    --global-bg-color: #202a30;
-    --global-code-bg-color: #283038;
-    --global-card-bg-color: #283038;
-    --global-divider-color: rgba(255, 255, 255, 0.12);
-    --global-text-color-light: #a0a8b0;
-    --global-footer-bg-color: #e8e8e8;
-    --global-footer-text-color: #202a30;
-  }
-}
-
 @media (max-width: 480px) {
   .diary-content {
     padding: 0 16px;
