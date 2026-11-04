@@ -36,7 +36,7 @@ robots: noindex, nofollow, noarchive, nosnippet, noimageindex
   {% assign week_num = entry.date | date: "%V" | plus: 0 %}
 
   <div class="diary-entry">
-    <span class="diary-week">W{{ week_num }}</span>
+    <span class="diary-week">w{{ week_num }}</span>
     <a href="{{ entry.url | relative_url }}">{% if entry_start_m == entry_end_m %}{{ entry_ts | date: "%m/%d" }}–{{ entry_end_ts | date: "%d" }}{% else %}{{ entry_ts | date: "%m/%d" }}–{{ entry_end_ts | date: "%m/%d" }}{% endif %}</a>
     {% if entry.description %} <small class="text-muted">— {{ entry.description }}</small>{% endif %}
   </div>
