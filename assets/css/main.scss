@@ -132,6 +132,16 @@
 }
 
 // メールアドレスは @ を CSS で描く（本文テキストには含めない）
+// works: cover image column on the right
+.publications ol.bibliography li .preview-col {
+  padding-top: 0.25rem;
+  text-align: right;
+
+  .preview {
+    max-width: 110px;
+  }
+}
+
 .profile-email-at::before {
   content: "@";
 }
