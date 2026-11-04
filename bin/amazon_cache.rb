@@ -9,6 +9,7 @@ Encoding.default_external = Encoding::UTF_8
 #   ruby bin/amazon_cache.rb --check --warn   # 同上だが exit 0（CI 用。GitHub Actions では ::warning:: を出す）
 #   ruby bin/amazon_cache.rb --refresh B0XXXXXXXX   # 指定 ASIN を再取得
 #   ruby bin/amazon_cache.rb --refresh-all          # 全件再取得（画像 URL が死んだとき）
+#   ruby bin/amazon_cache.rb --verify     # キャッシュ済みの画像 URL が今も生きているか確認（死んでいれば exit 1）
 #
 # 自分の Mac（住宅用 IP、ブラウザと同じ UA）から Amazon の商品ページを 1 回だけ読み、
 # 商品名・著者・画像 URL（m.media-amazon.com への直リンク）を保存する。
@@ -27,9 +28,10 @@ SCAN_GLOBS = %w[_diary/**/*.md _posts/**/*.md _pages/**/*.md _news/**/*.md].free
 UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36'
 SLEEP_BETWEEN_FETCHES = 1.5
 
-opts = { check: false, warn: false, refresh: [], refresh_all: false, quiet: false }
+opts = { check: false, verify: false, warn: false, refresh: [], refresh_all: false, quiet: false }
 OptionParser.new do |o|
   o.on('--check') { opts[:check] = true }
+  o.on('--verify') { opts[:verify] = true }
   o.on('--warn') { opts[:warn] = true }
   o.on('--refresh ASIN') { |a| opts[:refresh] << a.upcase }
   o.on('--refresh-all') { opts[:refresh_all] = true }
@@ -111,6 +113,34 @@ end
 
 cache = AmazonCard.load_cache(ROOT)
 urls = collect_urls
+
+# --verify: キャッシュ済みの画像 URL を HEAD して死活確認（画像 CDN は bot 対策の対象外なので CI からでも引ける）
+if opts[:verify]
+  dead = []
+  cache['items'].each do |asin, item|
+    next unless item['image']
+    line = begin
+      curl('-L', '-I', '-o', '/dev/null', '-w', '%{http_code} %{size_download} %{content_type}', item['image']).strip
+    rescue StandardError => e
+      "000 0 #{e.message}"
+    end
+    code, _size, ctype = line.split(' ', 3)
+    # 旧式の書影エンドポイントは該当なしでも 200 で 1x1 GIF を返す。サイズが取れないので Content-Length で判定
+    clen = item['image'].include?('/images/P/') ? curl('-L', '-I', item['image'])[/content-length:\s*(\d+)/i, 1].to_i : nil
+    alive = code == '200' && ctype.to_s.start_with?('image/') && (clen.nil? || clen > 1000)
+    next if alive
+
+    dead << [asin, item['title'], item['image'], line]
+    msg = "画像 URL が死んでいる: #{asin} #{item['title']} #{item['image']}（#{line}）"
+    warn msg
+    puts "::error::#{msg}" if ENV['GITHUB_ACTIONS']
+  end
+  log("#{cache['items'].size} 件中 #{dead.size} 件の画像が無効", opts)
+  unless dead.empty?
+    warn "`ruby bin/amazon_cache.rb --refresh #{dead.map(&:first).join(' --refresh ')}` で取り直してください"
+  end
+  exit(dead.empty? || opts[:warn] ? 0 : 1)
+end
 
 # --check: 取得せず点検だけ
 if opts[:check]

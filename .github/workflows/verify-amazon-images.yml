@@ -1,0 +1,25 @@
+# Amazon カードの書影 URL（m.media-amazon.com 直リンク）が今も生きているかを月に一度確かめる。
+# 死んでいればこのジョブが失敗し、GitHub からメールが来る。
+# 直し方: Mac で `ruby bin/amazon_cache.rb --refresh <ASIN>`（失敗ログに ASIN が出る）→ commit → push
+name: Verify Amazon card images
+
+on:
+  schedule:
+    - cron: "0 22 1 * *" # 毎月 2 日 07:00 JST
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+      - name: Verify cached image URLs
+        run: ruby bin/amazon_cache.rb --verify
