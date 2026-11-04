@@ -286,6 +286,9 @@
       {% if entry.publisher_url %}
         <a href="{{ entry.publisher_url }}" class="btn btn-sm z-depth-0" role="button" target="_blank" rel="noopener">出版社</a>
       {% endif %}
+      {% if entry.program %}
+        <a href="{{ entry.program }}" class="btn btn-sm z-depth-0" role="button" target="_blank" rel="noopener">プログラム</a>
+      {% endif %}
       {% if entry.amazon %}
         <a href="https://www.amazon.co.jp/dp/{{ entry.amazon }}?tag=aglossian-22" class="btn btn-sm z-depth-0" role="button" target="_blank" rel="noopener nofollow sponsored">Amazon</a>
       {% endif %}
