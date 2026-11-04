@@ -1,0 +1,18 @@
+<div class="amazon-card">
+  <a class="amazon-card-body" href="{{ include.url }}" rel="noopener nofollow" target="_blank">
+    <strong class="amazon-card-title">{{ include.title }}</strong>
+    <span class="amazon-card-domain">amzn.to</span>
+    <div class="amazon-card-price">
+      <em>{{ include.price }}<span class="amazon-card-currency">円</span></em>
+      {% if include.date %}<span class="amazon-card-update">({{ include.date }}時点)</span>{% endif %}
+    </div>
+    <div class="amazon-card-button">
+      <span class="amazon-card-button-label">Amazon.co.jpで購入する</span>
+    </div>
+  </a>
+  {% if include.image %}
+  <a class="amazon-card-image" href="{{ include.url }}" rel="noopener nofollow" target="_blank">
+    <span style="background-image:url({{ include.image }})"></span>
+  </a>
+  {% endif %}
+</div>

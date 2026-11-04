@@ -38,3 +38,131 @@
     transform: translateY(4px);
   }
 }
+
+// Amazon card (note.com style)
+.amazon-card {
+  display: table;
+  width: 100%;
+  max-width: 540px;
+  border: 1px solid var(--global-divider-color);
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 1.5rem 0;
+}
+
+.amazon-card-body {
+  display: table-cell;
+  vertical-align: middle;
+  padding: 16px;
+  text-decoration: none;
+  color: var(--global-text-color);
+}
+
+.amazon-card-title {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+  margin-bottom: 4px;
+}
+
+.amazon-card-domain {
+  display: block;
+  font-size: 12px;
+  color: var(--global-text-color-light);
+}
+
+.amazon-card-price {
+  margin-top: 12px;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px;
+
+  em {
+    font-style: normal;
+    font-size: 16px;
+    font-weight: 600;
+  }
+}
+
+.amazon-card-currency {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.amazon-card-update {
+  font-size: 12px;
+  color: var(--global-text-color-light);
+}
+
+.amazon-card-button {
+  margin-top: 12px;
+}
+
+.amazon-card-button-label {
+  display: inline-block;
+  background: var(--global-text-color);
+  color: var(--global-bg-color);
+  font-size: 12px;
+  padding: 6px 16px;
+  border-radius: 4px;
+  line-height: 1;
+}
+
+.amazon-card-image {
+  display: table-cell;
+  vertical-align: middle;
+  width: 120px;
+  padding: 12px;
+
+  span {
+    display: block;
+    width: 100%;
+    padding-top: 130%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+}
+
+// Dark mode: match note.com palette
+html[data-theme="dark"] {
+  --global-bg-color: #202a30;
+  --global-code-bg-color: #283038;
+  --global-card-bg-color: #283038;
+  --global-divider-color: rgba(255, 255, 255, 0.12);
+  --global-text-color-light: #a0a8b0;
+  --global-footer-bg-color: #e8e8e8;
+  --global-footer-text-color: #202a30;
+}
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) {
+    --global-bg-color: #202a30;
+    --global-code-bg-color: #283038;
+    --global-card-bg-color: #283038;
+    --global-divider-color: rgba(255, 255, 255, 0.12);
+    --global-text-color-light: #a0a8b0;
+    --global-footer-bg-color: #e8e8e8;
+    --global-footer-text-color: #202a30;
+  }
+}
+
+@media (max-width: 480px) {
+  .amazon-card {
+    display: block;
+  }
+  .amazon-card-body {
+    display: block;
+  }
+  .amazon-card-image {
+    display: block;
+    width: 100%;
+    padding: 0 16px 16px;
+
+    span {
+      max-width: 120px;
+      padding-top: 120px;
+    }
+  }
+}
