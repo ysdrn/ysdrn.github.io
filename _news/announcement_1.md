@@ -5,4 +5,4 @@ inline: true
 related_posts: false
 ---
 
-サイトを開設しました。業績一覧とブログを掲載していきます。
+サイトを開設しました。
