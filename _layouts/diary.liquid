@@ -1,0 +1,33 @@
+---
+layout: default
+---
+
+{% assign start_ts = page.date | date: "%s" | plus: 0 %}
+{% assign end_ts = start_ts | plus: 518400 %}
+{% assign start_month = start_ts | date: "%m" %}
+{% assign end_month = end_ts | date: "%m" %}
+
+<div class="post">
+  <header class="post-header">
+    <h1 class="post-title">
+      {%- if start_month == end_month -%}
+        {{ start_ts | date: "%Y/%m/%d" }}–{{ end_ts | date: "%d" }}
+      {%- else -%}
+        {{ start_ts | date: "%Y/%m/%d" }}–{{ end_ts | date: "%m/%d" }}
+      {%- endif -%}
+    </h1>
+    {% if page.description and page.description != "" %}
+      <p class="post-description">{{ page.description }}</p>
+    {% endif %}
+  </header>
+
+  <article class="post-content">
+    {% assign days_content = content | split: "<!-- day -->" %}
+    {% for day in days_content %}
+      {% assign day_offset = forloop.index0 | times: 86400 %}
+      {% assign day_ts = start_ts | plus: day_offset %}
+      <h2>{{ day_ts | date: "%Y/%m/%d" }} {{ day_ts | date: "%a" }}</h2>
+      {{ day }}
+    {% endfor %}
+  </article>
+</div>

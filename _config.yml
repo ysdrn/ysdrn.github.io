@@ -222,7 +222,7 @@ defaults:
   - scope:
       type: "diary"
     values:
-      layout: post
+      layout: diary
 
 sass:
   style: compressed
