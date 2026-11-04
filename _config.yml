@@ -134,7 +134,7 @@ collections:
     output: true
   diary:
     output: true
-    permalink: /diary/:year/:month/:day/:title/
+    permalink: /diary/:year/:title/
 
 # -----------------------------------------------------------------------------
 # Jekyll settings
