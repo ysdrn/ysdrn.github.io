@@ -85,14 +85,18 @@
 }
 .diary-days-nav {
   display: flex;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
   font-size: 14px;
+  border-bottom: 1px solid var(--global-divider-color);
+  margin-bottom: 1.5rem;
   a {
     text-decoration: none;
     color: var(--global-text-color-light);
+    padding: 2px 0;
     &:hover { color: var(--global-theme-color); }
-    small { margin-left: 2px; font-size: 0.85em; }
+    small { display: block; font-size: 0.75em; text-align: center; }
   }
 }
 
