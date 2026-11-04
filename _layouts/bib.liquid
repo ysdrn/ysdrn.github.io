@@ -74,6 +74,14 @@
         {% assign author_array_limit = site.max_author_limit %}
       {% endif %}
 
+      {%- comment -%}
+        Authors whose surname has non-ASCII characters are Japanese names: join them
+        with ・ instead of ", " and "and".
+      {%- endcomment -%}
+      {% assign first_author = entry.author_array | first %}
+      {% assign first_last_ascii = first_author.last | regex_replace: '[[:ascii:]]+', '' %}
+      {% assign ja_authors = false %}
+      {% if first_last_ascii != '' %}{% assign ja_authors = true %}{% endif %}
       {%- for author in entry.author_array limit: author_array_limit -%}
         {% assign author_is_self = false %}
         {%- assign author_last_name = author.last | regex_replace: '[*∗†‡§¶‖&^]', '' -%}
@@ -95,25 +103,28 @@
         {%- endif -%}
 
         {%- if forloop.length > 1 -%}
-          {% if forloop.first == false -%}
-            {%- if forloop.length > 2 %}, {% elsif forloop.length == 2 %}  {% endif %}
-          {%- endif %}
-          {%- if forloop.last and author_array_limit == author_array_size %}and {% endif -%}
+          {%- if ja_authors -%}
+            {%- if forloop.first == false %}・{% endif -%}
+          {%- else -%}
+            {% if forloop.first == false -%}
+              {%- if forloop.length > 2 %}, {% elsif forloop.length == 2 %}  {% endif %}
+            {%- endif %}
+            {%- if forloop.last and author_array_limit == author_array_size %}and {% endif -%}
+          {%- endif -%}
         {% endif %}
+        {%- capture author_name %}{{ author.first }} {{ author_last_html }}{% endcapture -%}
+        {%- assign author_name = author_name | strip -%}
         {%- if author_is_self -%}
           <em>
-            {{- author.first }}
-            {{ author_last_html -}}
+            {{- author_name -}}
           </em>
         {%- else -%}
           {%- if coauthor_url -%}
             <a href="{{ coauthor_url }}">
-              {{- author.first }}
-              {{ author_last_html -}}
+              {{- author_name -}}
             </a>
           {%- else -%}
-            {{- author.first }}
-            {{ author_last_html -}}
+            {{- author_name -}}
           {% endif %}
         {%- endif -%}
       {% endfor %}
@@ -165,48 +176,70 @@
     </div>
 
     <!-- Journal/Book title and date -->
-    {% assign proceedings = 'inproceedings,incollection' | split: ',' %}
+    {%- comment -%}
+      Venue line. The theme's version shows only journal / booktitle / school and
+      drops howpublished, publisher, volume, number, pages and address, so most of
+      what papers.bib records never reached the page. This version keeps all of
+      them and uses Japanese bibliographic conventions: 『』 around journal and
+      book titles instead of italics (Japanese has no italic), 第N号 / 頁 for
+      number and pages, YYYY年M月 for the date, no English "In".
+    {%- endcomment -%}
+    {% assign proceedings = 'inproceedings' | split: ',' %}
+    {% assign collections = 'incollection,inbook' | split: ',' %}
     {% assign thesis = 'thesis,mastersthesis,phdthesis' | split: ',' %}
+    {% assign parts = '' | split: ',' %}
     {% if entry.type == 'article' %}
-      {% capture entrytype %}<em>{{ entry.journal }}</em>{% endcapture %}
+      {% capture venue %}『{{ entry.journal }}』{% if entry.volume %}{{ entry.volume }}{% if entry.number %}({{ entry.number }}){% endif %}{% elsif entry.number %}第{{ entry.number }}号{% endif %}{% endcapture %}
+      {% assign parts = parts | push: venue %}
+      {% if entry.pages %}{% assign pages = entry.pages | replace: '--', '–' | append: '頁' %}{% assign parts = parts | push: pages %}{% endif %}
+      {% if entry.publisher %}{% assign parts = parts | push: entry.publisher %}{% endif %}
     {% elsif proceedings contains entry.type %}
-      {% capture entrytype %}<em>In {{ entry.booktitle }}</em>{% endcapture %}
+      {% capture venue %}{{ entry.booktitle }}{% if entry.address %}（{{ entry.address }}）{% endif %}{% endcapture %}
+      {% assign parts = parts | push: venue %}
+    {% elsif collections contains entry.type %}
+      {% capture venue %}『{{ entry.booktitle }}』{% endcapture %}
+      {% assign parts = parts | push: venue %}
+      {% if entry.pages %}{% assign pages = entry.pages | replace: '--', '–' | append: '頁' %}{% assign parts = parts | push: pages %}{% endif %}
+      {% if entry.publisher %}{% assign parts = parts | push: entry.publisher %}{% endif %}
+    {% elsif entry.type == 'book' %}
+      {% if entry.publisher %}{% assign parts = parts | push: entry.publisher %}{% endif %}
     {% elsif thesis contains entry.type %}
-      {% capture entrytype %}<em>{{ entry.school }}</em>{% endcapture %}
+      {% if entry.school %}{% assign parts = parts | push: entry.school %}{% endif %}
     {% else %}
-      {% capture entrytype %}{% endcapture %}
+      {% if entry.howpublished %}{% assign parts = parts | push: entry.howpublished %}{% endif %}
+      {% if entry.publisher %}{% assign parts = parts | push: entry.publisher %}{% endif %}
+    {% endif %}
+    {% if entry.location %}{% assign parts = parts | push: entry.location %}{% endif %}
+    {% if entry.additional_info %}
+      {% assign extra = entry.additional_info | markdownify | remove: '<p>' | remove: '</p>' | strip %}
+      {% assign parts = parts | push: extra %}
     {% endif %}
     {% assign entrydate = '' %}
     {% if entry.year %}
-      {% assign entrydate = entry.year | append: '' %}
+      {% assign entrydate = entry.year | append: '年' %}
       {% if entry.month %}
         {% assign month_abbrs = 'jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec' | split: ',' %}
-        {% assign month_lower = entry.month | downcase | strip %}
+        {% assign month_lower = entry.month | downcase | strip | slice: 0, 3 %}
         {% for m in month_abbrs %}
           {% if month_lower == m %}
-            {% assign entrydate = entry.year | append: '/' | append: forloop.index %}
+            {% assign entrydate = entrydate | append: forloop.index | append: '月' %}
           {% endif %}
         {% endfor %}
       {% endif %}
     {% endif %}
-    {% if entry.location %}
-      {% capture entrytype %}{{ entrytype }}{{ ", " }}{{ entry.location }}{% endcapture %}
-    {% endif -%}
-    {% if entry.additional_info %}
-      {% capture entrytype %}{{ entrytype }}{{ entry.additional_info | markdownify | remove: '<p>' | remove: '</p>' }}{% endcapture %}
-    {% endif %}
+    {% if entrydate != '' %}{% assign parts = parts | push: entrydate %}{% endif %}
     {% capture hook_exists %}{% file_exists _includes/hook/bib.liquid %}{% endcapture %}
     {% if hook_exists == 'true' %}
       {% include hook/bib.liquid %}
     {% endif %}
-    {% assign entrytype_text = entrytype | strip_html | strip %}
-    {% capture periodical %}{{ entrytype }}{% if entrytype_text != "" and entrydate != "" %}, {% endif %}{{ entrydate }}{% endcapture %}
     <div class="periodical">
-      {{ periodical | strip }}
+      {{ parts | join: ', ' }}
     </div>
-    <div class="periodical">
-      {{ entry.note | strip }}
-    </div>
+    {% if entry.note %}
+      <div class="periodical">
+        {{ entry.note | strip }}
+      </div>
+    {% endif %}
 
     <!-- Links/Buttons -->
     <div class="links">
