@@ -23,15 +23,7 @@ nav_order: 4
   {% assign entry_start_m = entry_ts | date: "%m" %}
   {% assign entry_end_m = entry_end_ts | date: "%m" %}
 
-<div class="row mt-3">
-  <div class="col-sm-3">
-    <span class="badge rounded-pill bg-primary">{{ entry_ts | date: "%m/%d" }}</span>
-  </div>
-  <div class="col-sm-9">
-    <a href="{{ entry.url | relative_url }}">{% if entry_start_m == entry_end_m %}{{ entry_ts | date: "%m/%d" }}–{{ entry_end_ts | date: "%d" }}{% else %}{{ entry_ts | date: "%m/%d" }}–{{ entry_end_ts | date: "%m/%d" }}{% endif %}</a>
-    {% if entry.description %}<br><small class="text-muted">{{ entry.description }}</small>{% endif %}
-  </div>
-</div>
+{% capture entry_range %}{% if entry_start_m == entry_end_m %}{{ entry_ts | date: "%m/%d" }}–{{ entry_end_ts | date: "%d" }}{% else %}{{ entry_ts | date: "%m/%d" }}–{{ entry_end_ts | date: "%m/%d" }}{% endif %}{% endcapture %}<a href="{{ entry.url | relative_url }}">{{ entry_range }}</a>{% if entry.description %} — {{ entry.description }}{% endif %}
 
 {% endfor %}
 
