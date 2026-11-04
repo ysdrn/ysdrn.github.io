@@ -5,6 +5,7 @@ title: diary
 description:
 nav: true
 nav_order: 4
+robots: noindex, nofollow, noarchive, nosnippet, noimageindex
 ---
 
 <style>
