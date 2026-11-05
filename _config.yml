@@ -135,7 +135,7 @@ collections:
     output: true
   diary:
     output: true
-    permalink: /diary/:year/:title/
+    permalink: /diary/:year/w:title/ # :title はファイル名の週番号（2025-03-17-12.md → /diary/2025/w12/）
 
 # -----------------------------------------------------------------------------
 # Jekyll settings
