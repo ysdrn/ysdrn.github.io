@@ -77,12 +77,13 @@
 .diary-nav-index {
   font-weight: 500;
 }
-// Diary series (博論日記 など): label above the week title (the list pages do not show it)
+// Diary series (博論日記 など): label under the posted date, right-aligned (the list pages do not show it)
 .diary-series {
   font-size: 14px;
-  font-weight: 500;
   color: var(--global-theme-color);
-  margin-bottom: 0.25rem;
+  text-align: right;
+  margin-top: -1.25rem;
+  margin-bottom: 1.5rem;
   a { color: inherit; text-decoration: none; &:hover { text-decoration: underline; } }
 }
 .diary-posted {
