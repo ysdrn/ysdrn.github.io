@@ -3,7 +3,7 @@
 # 雑誌・新聞などへの短い寄稿（書評・解説・報告・序文・随筆・対談）は橙でまとめる。
 論文:
   color: "#2563eb"
-発表:
+Presentation:
   color: "#64748b"
 Commentator:
   color: "#78716c"
