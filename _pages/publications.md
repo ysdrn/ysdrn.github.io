@@ -1,7 +1,7 @@
 ---
 layout: page
 permalink: /publications/
-title: works
+title: publications
 og_title: publications of Ren Yoshida
 description:
 nav: true
@@ -12,6 +12,10 @@ nav_order: 2
 
 <div class="publications">
 
-{% bibliography %}
+{% comment %}
+  papers.bib is shared with /talks/. Talks (incl. comments) are @inproceedings and
+  live on that page; everything else is a publication. Add new entry types here if used.
+{% endcomment %}
+{% bibliography --query @article,@book,@incollection,@inbook,@misc,@mastersthesis,@phdthesis,@unpublished %}
 
 </div>
