@@ -22,18 +22,22 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 {%- comment -%}
 Local override: 日記の週ページ（collection diary）の <title> と og:title / twitter:title。
-title があればそれ、なければ「[シリーズ名 ]2026w46」（週の名前）。Jekyll が slug から自動で入れる title（"46"）は無視する。
+title があればそれ、なければ「[シリーズ名 ]YYYY/MM/DD–DD」（見出しと同じ）。Jekyll が slug から自動で入れる title（"46"）は無視する。
 {%- endcomment -%}
 {% if page.collection == 'diary' %}
-  {% capture d_week %}{{ page.date | date: "%G" }}w{{ page.date | date: "%V" | plus: 0 }}{% endcapture %}
+  {% assign d_start = page.date | date: "%s" | plus: 0 %}
+  {% assign d_end = d_start | plus: 518400 %}
+  {% assign d_sm = d_start | date: "%m" %}
+  {% assign d_em = d_end | date: "%m" %}
+  {% capture d_range %}{{ d_start | date: "%Y/%m/%d" }}–{% if d_sm == d_em %}{{ d_end | date: "%d" }}{% else %}{{ d_end | date: "%m/%d" }}{% endif %}{% endcapture %}
   {% if page.title and page.title != "" and page.title != page.slug %}
     {% capture diary_heading %}{{ page.title }}{% endcapture %}
   {% elsif page.series %}
     {% assign d_series = site.data.diary_series | where: "key", page.series | first %}
     {% if d_series %}{% assign d_series_name = d_series.name %}{% else %}{% assign d_series_name = page.series %}{% endif %}
-    {% capture diary_heading %}{{ d_series_name }} {{ d_week }}{% endcapture %}
+    {% capture diary_heading %}{{ d_series_name }} {{ d_range }}{% endcapture %}
   {% else %}
-    {% capture diary_heading %}{{ d_week }}{% endcapture %}
+    {% capture diary_heading %}{{ d_range }}{% endcapture %}
   {% endif %}
 {% endif %}
 <title>

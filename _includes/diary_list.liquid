@@ -1,8 +1,8 @@
 {%- comment -%}
 日記の一覧。/diary/（全部）と /diary/<series>/（シリーズだけ）で共用。
 notes（/blog/）と同じ post-list の形。
-週の名前は「2026w46」（ISO 年 + w + ISO 週番号）。front matter に title があればそれを題にして、
-週の名前はメタ行に回す。title を書かなければ週の名前が題。
+題は front matter の title、なければ期間「2026/11/09–15」。メタ行は「2026w46 · 投稿日」（週の名前は ISO 年 + w + ISO 週番号）。
+title がある週は期間をメタ行に出す。
 （Jekyll は日付付きファイル名の文書に title を自動で入れる（slug の "46" など）ので、slug と同じ title は無いものとして扱う）
 シリーズ名は一覧には出さない（週ページの投稿日の下にだけ出す。本人の希望）。
 include.series を渡すとそのシリーズの週だけ出す。
@@ -31,9 +31,9 @@ include.series を渡すとそのシリーズの週だけ出す。
     {% assign blurb = entry.content | strip_html | replace: "<!-- day -->", " " | strip_newlines | strip | truncate: 90 %}
   {% endif %}
   <li>
-    <h3><a class="post-title" href="{{ entry.url | relative_url }}">{% if entry_title %}{{ entry_title }}{% else %}{{ week_id }}{% endif %}</a></h3>
+    <h3><a class="post-title" href="{{ entry.url | relative_url }}">{% if entry_title %}{{ entry_title }}{% else %}{{ week_range }}{% endif %}</a></h3>
     {% if blurb != "" %}<p>{{ blurb }}</p>{% endif %}
-    <p class="post-meta">{% if entry_title %}{{ week_id }} &nbsp; &middot; &nbsp; {% endif %}{{ week_range }}</p>
+    <p class="post-meta">{{ week_id }} &nbsp; &middot; &nbsp; {% if entry_title %}{{ week_range }}{% else %}{{ entry.date | date: "%Y年%-m月%-d日" }}{% endif %}</p>
   </li>
 {% endfor %}
 </ul>
