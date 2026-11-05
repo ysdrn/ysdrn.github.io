@@ -1,6 +1,7 @@
 {%- comment -%}
 日記の一覧。/diary/（全部）と /diary/<series>/（シリーズだけ）で共用。
-シリーズ名は一覧には出さない（週ページの見出しの上にだけ出す。本人の希望）。
+notes（/blog/）と同じ post-list の形: 週の題（日付範囲）、説明か本文の冒頭、投稿日。
+シリーズ名は一覧には出さない（週ページの投稿日の下にだけ出す。本人の希望）。
 include.series を渡すとそのシリーズの週だけ出す。
 {%- endcomment -%}
 {% if include.series %}
@@ -8,27 +9,25 @@ include.series を渡すとそのシリーズの週だけ出す。
 {% else %}
   {% assign sorted = site.diary | sort: "date" | reverse %}
 {% endif %}
-<div class="diary-list">
-{% assign current_year = "" %}
+<ul class="post-list diary-list">
 {% for entry in sorted %}
-  {% assign entry_year = entry.date | date: "%Y" %}
-  {% if entry_year != current_year %}
-  {% assign current_year = entry_year %}
-    <h2>{{ current_year }}</h2>
-  {% endif %}
   {% assign entry_ts = entry.date | date: "%s" | plus: 0 %}
   {% assign entry_end_ts = entry_ts | plus: 518400 %}
   {% assign entry_start_m = entry_ts | date: "%m" %}
   {% assign entry_end_m = entry_end_ts | date: "%m" %}
   {% assign week_num = entry.date | date: "%V" | plus: 0 %}
-
-  <div class="diary-entry">
-    <span class="diary-week">w{{ week_num }}</span>
-    <a href="{{ entry.url | relative_url }}">{% if entry_start_m == entry_end_m %}{{ entry_ts | date: "%m/%d" }}–{{ entry_end_ts | date: "%d" }}{% else %}{{ entry_ts | date: "%m/%d" }}–{{ entry_end_ts | date: "%m/%d" }}{% endif %}</a>
-    {% if entry.description %} <small class="text-muted">— {{ entry.description }}</small>{% endif %}
-  </div>
+  {% if entry.description and entry.description != "" %}
+    {% assign blurb = entry.description %}
+  {% else %}
+    {% assign blurb = entry.content | strip_html | replace: "<!-- day -->", " " | strip_newlines | strip | truncate: 90 %}
+  {% endif %}
+  <li>
+    <h3><a class="post-title" href="{{ entry.url | relative_url }}">{% if entry_start_m == entry_end_m %}{{ entry_ts | date: "%Y/%m/%d" }}–{{ entry_end_ts | date: "%d" }}{% else %}{{ entry_ts | date: "%Y/%m/%d" }}–{{ entry_end_ts | date: "%m/%d" }}{% endif %}</a></h3>
+    {% if blurb != "" %}<p>{{ blurb }}</p>{% endif %}
+    <p class="post-meta">w{{ week_num }} &nbsp; &middot; &nbsp; {{ entry.date | date: "%Y年%-m月%-d日" }}</p>
+  </li>
 {% endfor %}
-</div>
+</ul>
 
 {% if sorted.size == 0 %}
 まだ日記はありません。
