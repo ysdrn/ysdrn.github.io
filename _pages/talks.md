@@ -14,7 +14,7 @@ nav_order: 3
 
 {% comment %}
   Talks, comments and other spoken contributions: every @inproceedings entry in papers.bib.
-  abbr distinguishes own presentations (発表) from commentator roles (コメント).
+  abbr distinguishes own presentations (発表) from commentator roles (指定討論).
 {% endcomment %}
 {% bibliography --query @inproceedings %}
 
