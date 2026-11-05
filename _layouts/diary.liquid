@@ -6,7 +6,7 @@ layout: default
 {% assign end_ts = start_ts | plus: 518400 %}
 {% assign start_month = start_ts | date: "%m" %}
 {% assign end_month = end_ts | date: "%m" %}
-{%- comment -%} 題は title、なければ期間。投稿日の行は「2026w46 · 投稿日」（title がある週は期間）（_includes/diary_list.liquid と同じ規則） {%- endcomment -%}
+{%- comment -%} 題は title、なければ期間。右上は「2026w46」と「投稿日：YYYY年M月D日」の二行（title がある週は一行目に期間も）（_includes/diary_list.liquid と同じ規則） {%- endcomment -%}
 {% capture week_id %}{{ page.date | date: "%G" }}w{{ page.date | date: "%V" | plus: 0 }}{% endcapture %}
 {% capture week_range %}{{ start_ts | date: "%Y/%m/%d" }}–{% if start_month == end_month %}{{ end_ts | date: "%d" }}{% else %}{{ end_ts | date: "%m/%d" }}{% endif %}{% endcapture %}
 {% if page.title and page.title != "" and page.title != page.slug %}{% assign page_title = page.title %}{% else %}{% assign page_title = nil %}{% endif %}
@@ -51,11 +51,8 @@ layout: default
 
   <header class="post-header">
     <h1 class="post-title">{% if page_title %}{{ page_title }}{% else %}{{ week_range }}{% endif %}</h1>
-    <p class="diary-posted">{{ week_id }} &nbsp;&middot;&nbsp; {% if page_title %}{{ week_range }}{% else %}{{ page.date | date: "%Y年%-m月%-d日" }}{% endif %}</p>
-    {% if page.series %}
-      {% assign series_info = site.data.diary_series | where: "key", page.series | first %}
-      <p class="diary-series">{% if series_info %}<a href="{{ '/diary/' | append: series_info.key | append: '/' | relative_url }}">{{ series_info.name }}</a>{% else %}{{ page.series }}{% endif %}</p>
-    {% endif %}
+    {%- comment -%} 右寄せ二行: 「2026w46」（title がある週は期間も）と「投稿日：2026年11月9日」。シリーズ名は出さない（本人の希望） {%- endcomment -%}
+    <p class="diary-posted">{{ week_id }}{% if page_title %} &nbsp;&middot;&nbsp; {{ week_range }}{% endif %}<br>投稿日：{{ page.date | date: "%Y年%-m月%-d日" }}</p>
     {% if page.description and page.description != "" %}
       <p class="post-description">{{ page.description }}</p>
     {% endif %}
