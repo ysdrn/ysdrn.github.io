@@ -1,0 +1,9 @@
+# 日記のシリーズ。
+# 週ファイル（_diary/YYYY-MM-DD-WW.md）の front matter に `series: <key>` を書くと、
+# その週のページと /diary/ の一覧にシリーズ名が付き、/diary/<key>/ にそのシリーズだけの一覧ができる
+# （一覧ページは _plugins/diary_series.rb がここから作る）。
+# 新しいシリーズ（例: ポスドク日記）を始めるときは、ここに一件足して、その週から series を書く。
+# key は URL になるので ASCII 小文字。
+- key: dissertation
+  name: 博論日記
+  description: 博士論文を書き上げるまでの日記。2026年11月9日の週から。

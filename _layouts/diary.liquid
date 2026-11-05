@@ -54,6 +54,10 @@ layout: default
   </nav>
 
   <header class="post-header">
+    {% if page.series %}
+      {% assign series_info = site.data.diary_series | where: "key", page.series | first %}
+      <p class="diary-series">{% if series_info %}<a href="{{ '/diary/' | append: series_info.key | append: '/' | relative_url }}">{{ series_info.name }}</a>{% else %}{{ page.series }}{% endif %}</p>
+    {% endif %}
     <h1 class="post-title">
       {%- if start_month == end_month -%}
         {{ start_ts | date: "%Y/%m/%d" }}–{{ end_ts | date: "%d" }}

@@ -77,6 +77,27 @@
 .diary-nav-index {
   font-weight: 500;
 }
+// Diary series (博論日記 など): label above the week title, tag in the list, series links on /diary/
+.diary-series {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--global-theme-color);
+  margin-bottom: 0.25rem;
+  a { color: inherit; text-decoration: none; &:hover { text-decoration: underline; } }
+}
+.diary-series-tag {
+  font-size: 0.8em;
+  color: var(--global-theme-color);
+  margin-left: 0.4rem;
+  text-decoration: none;
+  &:hover { text-decoration: underline; }
+}
+.diary-series-list {
+  font-size: 14px;
+  color: var(--global-text-color-light);
+  margin-bottom: 0.5rem;
+  a { text-decoration: none; &:hover { text-decoration: underline; } }
+}
 .diary-posted {
   font-size: 14px;
   color: var(--global-text-color-light);

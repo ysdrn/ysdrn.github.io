@@ -20,6 +20,24 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
+{%- comment -%}
+Local override: 日記の週ページ（collection diary）は title が空なので、見出しと同じ
+「[シリーズ名 ]YYYY/MM/DD–DD」を <title> と og:title / twitter:title に使う。
+{%- endcomment -%}
+{% if page.collection == 'diary' %}
+  {% assign d_start = page.date | date: "%s" | plus: 0 %}
+  {% assign d_end = d_start | plus: 518400 %}
+  {% assign d_sm = d_start | date: "%m" %}
+  {% assign d_em = d_end | date: "%m" %}
+  {% capture diary_range %}{{ d_start | date: "%Y/%m/%d" }}–{% if d_sm == d_em %}{{ d_end | date: "%d" }}{% else %}{{ d_end | date: "%m/%d" }}{% endif %}{% endcapture %}
+  {% if page.series %}
+    {% assign d_series = site.data.diary_series | where: "key", page.series | first %}
+    {% if d_series %}{% assign d_series_name = d_series.name %}{% else %}{% assign d_series_name = page.series %}{% endif %}
+    {% capture diary_heading %}{{ d_series_name }} {{ diary_range }}{% endcapture %}
+  {% else %}
+    {% capture diary_heading %}{{ diary_range }}{% endcapture %}
+  {% endif %}
+{% endif %}
 <title>
   {% if site.title == 'blank' %}
     {% capture title %}{{ author_name }}{% endcapture %}
@@ -28,6 +46,8 @@
   {% endif %}
   {% if page.url == '/blog/index.html' %}
     {{ page.title }} | {{ title }}
+  {% elsif diary_heading %}
+    {{ diary_heading }} | {{ title }}
   {% elsif page.title != 'blank' and page.url != '/' %}
     {% if page.title == null or page.title == '' %}
       {{ page.date | date: '%Y' }} | {{ title }}
@@ -56,7 +76,7 @@
   <meta property="og:site_name" content="{{ title }}">
   <meta property="og:type" content="{% if is_blog_post %}article{% else %}website{% endif %}">
   {%- comment -%} Local override: a page may set og_title in its front matter to control the card heading (used by the top page). {%- endcomment -%}
-  <meta property="og:title" content="{% if page.og_title %}{{ page.og_title }}{% elsif page.title %}{{ title }} | {{ page.title }}{% else %}{{ title }}{% endif %}">
+  <meta property="og:title" content="{% if page.og_title %}{{ page.og_title }}{% elsif diary_heading %}{{ diary_heading }} | diary of Ren Yoshida{% elsif page.title %}{{ title }} | {{ page.title }}{% else %}{{ title }}{% endif %}">
   <meta property="og:url" content="{{ page.url | prepend: site.baseurl | prepend: site.url | remove_first: 'index.html' }}">
   <meta property="og:description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
   {% if page.og_image or site.og_image %}
@@ -73,7 +93,7 @@
   <!-- Twitter card -->
   {%- comment -%} Local override of the theme include (see og_title above). Keep the small "summary" card: the owner does not want the large image. {%- endcomment -%}
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="{% if page.og_title %}{{ page.og_title }}{% elsif page.title %}{{ page.title }}{% else %}{{ title }}{% endif %}">
+  <meta name="twitter:title" content="{% if page.og_title %}{{ page.og_title }}{% elsif diary_heading %}{{ diary_heading }} | diary of Ren Yoshida{% elsif page.title %}{{ page.title }}{% else %}{{ title }}{% endif %}">
   <meta name="twitter:description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
   {% if page.og_image or site.og_image %}
     <meta name="twitter:image" content="{{ og_image_url }}">
