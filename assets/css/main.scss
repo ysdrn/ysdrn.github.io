@@ -256,7 +256,10 @@
 // Noto Sans JP (loaded from Google Fonts in _config.yml) elsewhere. The theme's
 // Roboto body / 300-weight headings are overridden here; main.css loads after
 // tailwind.css so plain selectors are enough.
-$site-font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic Medium", "Yu Gothic", Meiryo, sans-serif;
+// 欧文は Inter（Google Fonts、可変ウェイト）、和文はヒラギノ → Noto Sans JP。
+// Inter を先頭に置くと、ラテン文字・数字だけ Inter で描かれ、仮名漢字は後ろの和文フォントに落ちる。
+// ヒラギノの欧文は太らせると字形が野暮ったい（2026-11-05 本人の指摘）。
+$site-font-family: "Inter", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic Medium", "Yu Gothic", Meiryo, sans-serif;
 
 body {
   font-family: $site-font-family;
