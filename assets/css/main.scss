@@ -86,6 +86,17 @@
   margin-bottom: 1.5rem;
   a { color: inherit; text-decoration: none; &:hover { text-decoration: underline; } }
 }
+// Diary list: year/month headings exist only for the left TOC (tocbot); keep them out of sight
+.diary-toc-heading {
+  height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-size: 0;
+  line-height: 0;
+}
+// The left TOC is short; tocbot's overflow-y:auto shows a scrollbar for a 1px overflow, so let it overflow
+#toc-sidebar.toc { overflow: visible; }
 .diary-posted {
   font-size: 14px;
   color: var(--global-text-color-light);

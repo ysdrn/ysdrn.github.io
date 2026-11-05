@@ -7,6 +7,8 @@ description:
 nav: true
 nav_order: 5
 robots: noindex, nofollow, noarchive, nosnippet, noimageindex
+toc:
+  sidebar: left
 ---
 
 {% include diary_list.liquid %}

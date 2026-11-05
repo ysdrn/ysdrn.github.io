@@ -12,8 +12,26 @@ include.series を渡すとそのシリーズの週だけ出す。
 {% else %}
   {% assign sorted = site.diary | sort: "date" | reverse %}
 {% endif %}
+{%- comment -%}
+左の目次（CV と同じテーマの tocbot。ページの front matter `toc: sidebar: left`）のために、
+年（h2）と月（h3）の見出しを各グループの先頭に置く。見出しは CSS で高さ 0 にして見せず、
+目次とスクロール追従にだけ使う。週の題の h3 は data-toc-skip で目次から外す。
+{%- endcomment -%}
+{% assign toc_year = "" %}
+{% assign toc_month = "" %}
 <ul class="post-list diary-list">
 {% for entry in sorted %}
+  {% assign entry_year = entry.date | date: "%Y" %}
+  {% assign entry_month = entry.date | date: "%Y-%m" %}
+  {% if entry_year != toc_year %}
+    {% assign toc_year = entry_year %}
+    {% assign toc_month = "" %}
+    <h2 class="diary-toc-heading" id="y{{ entry_year }}">{{ entry_year }}</h2>
+  {% endif %}
+  {% if entry_month != toc_month %}
+    {% assign toc_month = entry_month %}
+    <h3 class="diary-toc-heading" id="m{{ entry_month }}">{{ entry.date | date: "%-m月" }}</h3>
+  {% endif %}
   {% assign entry_ts = entry.date | date: "%s" | plus: 0 %}
   {% assign entry_end_ts = entry_ts | plus: 518400 %}
   {% assign entry_start_m = entry_ts | date: "%m" %}
@@ -31,7 +49,7 @@ include.series を渡すとそのシリーズの週だけ出す。
     {% assign blurb = entry.content | strip_html | replace: "<!-- day -->", " " | strip_newlines | strip | truncate: 90 %}
   {% endif %}
   <li>
-    <h3><a class="post-title" href="{{ entry.url | relative_url }}">{% if entry_title %}{{ entry_title }}{% else %}{{ week_range }}{% endif %}</a></h3>
+    <h3 data-toc-skip><a class="post-title" href="{{ entry.url | relative_url }}">{% if entry_title %}{{ entry_title }}{% else %}{{ week_range }}{% endif %}</a></h3>
     {% if blurb != "" %}<p>{{ blurb }}</p>{% endif %}
     <p class="post-meta">{{ week_id }} &nbsp; &middot; &nbsp; {% if entry_title %}{{ week_range }}{% else %}{{ entry.date | date: "%Y年%-m月%-d日" }}{% endif %}</p>
   </li>

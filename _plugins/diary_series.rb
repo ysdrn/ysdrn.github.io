@@ -26,6 +26,7 @@ module Jekyll
         page.data['series_key'] = key
         page.data['robots'] = 'noindex, nofollow, noarchive, nosnippet, noimageindex'
         page.data['sitemap'] = false
+        page.data['toc'] = { 'sidebar' => 'left' } # CV と同じ左の目次（年・月）
         page.content = "{% include diary_list.liquid series=\"#{key}\" %}"
         site.pages << page
       end
