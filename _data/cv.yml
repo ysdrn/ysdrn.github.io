@@ -1,4 +1,7 @@
 # CV ページ（/cv/）のデータ。al_folio_cv の RenderCV 形式。
+# 2026-11-05: テーマの CV レイアウトが気に入らず、ページ（_pages/cv.md）は削除して機能も無効にした。
+# データは将来の自前レイアウトのために残してある。復活させるなら _pages/cv.md を作り直し、
+# _config.yml の al_folio.features.cv.enabled を true に。
 # 正は Vault の research/業績一覧.md（researchmap と同期）。そちらを更新したらここも直す。
 # 公開しないもの: 生年月日・住所・電話・運転免許。
 # 見出しは nav に合わせて英語、中身は日本語。Experience は start_date の新しい順に自動で並ぶ。

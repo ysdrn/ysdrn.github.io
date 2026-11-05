@@ -5,7 +5,7 @@ title: diary
 og_title: diary of Ren Yoshida
 description:
 nav: true
-nav_order: 6
+nav_order: 5
 robots: noindex, nofollow, noarchive, nosnippet, noimageindex
 ---
 
