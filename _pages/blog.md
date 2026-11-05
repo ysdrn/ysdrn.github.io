@@ -4,7 +4,7 @@ permalink: /blog/
 title: notes
 og_title: notes of Ren Yoshida
 nav: true
-nav_order: 4
+nav_order: 5
 pagination:
   enabled: true
   collection: posts

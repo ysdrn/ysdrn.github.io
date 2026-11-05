@@ -1,0 +1,89 @@
+# CV ページ（/cv/）のデータ。al_folio_cv の RenderCV 形式。
+# 正は Vault の research/業績一覧.md（researchmap と同期）。そちらを更新したらここも直す。
+# 公開しないもの: 生年月日・住所・電話・運転免許。
+# 見出しは nav に合わせて英語、中身は日本語。Experience は start_date の新しい順に自動で並ぶ。
+cv:
+  name: 吉田 廉 / Ren Yoshida
+  label: 哲学（行為の哲学・G. E. M. アンスコム）
+  address:
+    region: Tokyo
+  website: https://researchmap.jp/yoshidaren
+  sections:
+    Experience:
+      - position: 非常勤講師（「哲学概論A」遠隔）
+        company: 三重大学 人文学部
+        start_date: 2026-09
+        end_date: 2027-03
+      - position: 事務補佐員
+        company: 東京大学 大学院人文社会系研究科 哲学研究室
+        start_date: 2026-04
+      - position: 研究支援者
+        company: 東洋大学 研究推進課
+        start_date: 2026-01
+      - position: リサーチ・アシスタント
+        company: 東京大学 大学院人文社会系研究科
+        start_date: 2025-07
+        end_date: 2025-12
+      - position: 特別研究員 DC1
+        company: 日本学術振興会
+        start_date: 2022-04
+        end_date: 2025-03
+      - position: ティーチング・アシスタント
+        company: 東京大学 文学部
+        start_date: 2021-04
+        end_date: 2022-03
+    Education:
+      - institution: 東京大学 大学院人文社会系研究科 基礎文化研究専攻 哲学専門分野
+        studyType: 博士課程
+        start_date: 2022-04
+        end_date: 2025-12
+        location: 東京
+      - institution: 東京大学 大学院人文社会系研究科 基礎文化研究専攻 哲学専門分野
+        studyType: 修士課程　修士（文学）
+        start_date: 2020-04
+        end_date: 2022-03
+        location: 東京
+      - institution: 日本大学 文理学部 哲学科
+        studyType: 学士課程
+        start_date: 2016-04
+        end_date: 2020-03
+        location: 東京
+    Awards:
+      - title: 特に優れた業績による返還免除（半額免除）
+        awarder: 日本学生支援機構
+        date: 2022-06
+    Grants:
+      - label: 2023–2025
+        details: 日本学術振興会 科学研究費助成事業 特別研究員奨励費「善の相テーゼの系譜学―G．E．M．アンスコム研究を中心に―」（研究代表者）
+    Teaching:
+      - label: 2026年度後期
+        details: 三重大学 人文学部「哲学概論A」（遠隔、全15回）非常勤講師
+      - label: 2024–2025
+        details: 東京大学フューチャーファカルティプログラム修了（第24期）
+      - label: 2021–2022
+        details: 東京大学 文学部 ティーチング・アシスタント
+    Service:
+      - label: 2026–
+        details: 日本哲学会 事務局幹事
+      - label: 2024–2025
+        details: 『恥と運命の倫理学』刊行記念ブックフェア（慶應義塾大学出版会）
+      - label: 2024
+        details: ブックフェア「スタンリー・カヴェルからはじめる書棚散策」（紀伊國屋書店新宿本店、フィルカル編集部）企画・運営
+      - label: 2023–2024
+        details: 雑誌『フィルカル』制作・企画・渉外
+      - label: 2023
+        details: 古田徹也『謝罪論』×大谷弘『道徳的に考えるとはどういうことか』トークイベント（ESPACE BIBLIO、フィルカル制作部）企画・運営・司会
+    Memberships:
+      - label: 哲学会
+        details: 2025年–
+      - label: アメリカ哲学フォーラム
+        details: 2023年–
+      - label: 日本イギリス哲学会
+        details: 2023年–
+      - label: 日本哲学会
+        details: 2021年–
+      - label: 応用哲学会
+        details: 2021年–
+    Publications and Talks:
+      - bullet: "論文・翻訳・書評など: [publications](/publications/)"
+      - bullet: "学会発表・コメント: [talks](/talks/)"
