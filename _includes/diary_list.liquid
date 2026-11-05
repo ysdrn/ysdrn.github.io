@@ -1,5 +1,6 @@
 {%- comment -%}
 日記の一覧。/diary/（全部）と /diary/<series>/（シリーズだけ）で共用。
+シリーズ名は一覧には出さない（週ページの見出しの上にだけ出す。本人の希望）。
 include.series を渡すとそのシリーズの週だけ出す。
 {%- endcomment -%}
 {% if include.series %}
@@ -9,27 +10,12 @@ include.series を渡すとそのシリーズの週だけ出す。
 {% endif %}
 <div class="diary-list">
 {% assign current_year = "" %}
-{% assign current_series = "" %}
 {% for entry in sorted %}
   {% assign entry_year = entry.date | date: "%Y" %}
   {% if entry_year != current_year %}
   {% assign current_year = entry_year %}
-  {% assign current_series = "" %}
-  <h2>{{ current_year }}</h2>
+    <h2>{{ current_year }}</h2>
   {% endif %}
-  {%- comment -%}
-  シリーズの区切り: 年の中でシリーズが変わったところに一度だけ名前を出す（行ごとには付けない）。
-  シリーズ専用の一覧（include.series あり）では出さない。
-  {%- endcomment -%}
-  {% assign entry_series = entry.series | default: "" %}
-  {% if include.series == nil and entry_series != current_series %}
-    {% assign current_series = entry_series %}
-    {% if entry_series != "" %}
-      {% assign s = site.data.diary_series | where: "key", entry_series | first %}
-      <p class="diary-series-heading">{% if s %}<a href="{{ '/diary/' | append: s.key | append: '/' | relative_url }}">{{ s.name }}</a>{% else %}{{ entry_series }}{% endif %}</p>
-    {% endif %}
-  {% endif %}
-
   {% assign entry_ts = entry.date | date: "%s" | plus: 0 %}
   {% assign entry_end_ts = entry_ts | plus: 518400 %}
   {% assign entry_start_m = entry_ts | date: "%m" %}
