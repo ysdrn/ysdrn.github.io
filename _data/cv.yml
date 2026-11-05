@@ -2,64 +2,95 @@
 # 正は Vault の research/業績一覧.md（researchmap と同期）。そちらを更新したらここも直す。
 # 公開しないもの: 生年月日・住所・電話・運転免許。
 # 見出しは nav に合わせて英語、中身は日本語。Experience は start_date の新しい順に自動で並ぶ。
+# 各項目の location / url / summary / highlights を埋めると、サンプルと同じ密度で表示される。
 cv:
   name: 吉田 廉 / Ren Yoshida
   label: 哲学（行為の哲学・G. E. M. アンスコム）
   address:
     region: Tokyo
   website: https://researchmap.jp/yoshidaren
+  summary: >-
+    行為の哲学を中心に、自己知とその限界（自己欺瞞）に関するトピックを研究しています。
+    あわせて 20 世紀オックスフォード・ケンブリッジの哲学（ウィトゲンシュタイン、ムーア、ライル、アンスコム、オースティン、ストローソン、ウィリアムズ、ギーチ、ダメット）を哲学史的な関心から研究し、
+    とくに G. E. M. アンスコムについては著作の翻訳と、その思想を明晰な形で取り出すことを目標にしています。
   sections:
     Experience:
-      - position: 非常勤講師（「哲学概論A」遠隔）
+      - position: 非常勤講師
         company: 三重大学 人文学部
+        location: 遠隔（三重大学）
+        url: https://www.human.mie-u.ac.jp/
         start_date: 2026-09
         end_date: 2027-03
+        summary: 「哲学概論A」（遠隔、全 15 回）を担当
       - position: 事務補佐員
         company: 東京大学 大学院人文社会系研究科 哲学研究室
+        location: 東京（本郷）
+        url: https://www.l.u-tokyo.ac.jp/philosophy/
         start_date: 2026-04
       - position: 研究支援者
-        company: 東洋大学 研究推進課
+        company: 東洋大学 研究推進部 研究推進課
+        location: 東京（白山）
+        url: https://www.toyo.ac.jp/
         start_date: 2026-01
       - position: リサーチ・アシスタント
         company: 東京大学 大学院人文社会系研究科
+        location: 東京（本郷）
+        url: https://www.l.u-tokyo.ac.jp/
         start_date: 2025-07
         end_date: 2025-12
       - position: 特別研究員 DC1
         company: 日本学術振興会
+        location: 東京大学
+        url: https://www.jsps.go.jp/
         start_date: 2022-04
         end_date: 2025-03
+        summary: 研究課題「善の相テーゼの系譜学―G．E．M．アンスコム研究を中心に―」
       - position: ティーチング・アシスタント
         company: 東京大学 文学部
+        location: 東京（本郷）
+        url: https://www.l.u-tokyo.ac.jp/
         start_date: 2021-04
         end_date: 2022-03
     Education:
-      - institution: 東京大学 大学院人文社会系研究科 基礎文化研究専攻 哲学専門分野
+      - institution: 東京大学 大学院人文社会系研究科
+        area: 基礎文化研究専攻 哲学専門分野
         studyType: 博士課程
+        location: 東京（本郷）
+        url: https://www.l.u-tokyo.ac.jp/philosophy/
         start_date: 2022-04
         end_date: 2025-12
-        location: 東京
-      - institution: 東京大学 大学院人文社会系研究科 基礎文化研究専攻 哲学専門分野
+        highlights:
+          - 2025 年 12 月 単位取得満期退学
+          - 研究テーマ: G. E. M. アンスコムの実践的知識と行為の哲学
+      - institution: 東京大学 大学院人文社会系研究科
+        area: 基礎文化研究専攻 哲学専門分野
         studyType: 修士課程　修士（文学）
+        location: 東京（本郷）
+        url: https://www.l.u-tokyo.ac.jp/philosophy/
         start_date: 2020-04
         end_date: 2022-03
-        location: 東京
-      - institution: 日本大学 文理学部 哲学科
+        highlights:
+          - 修士論文「推論・知識・真理――アンスコムの実践哲学」（2021 年 12 月）
+      - institution: 日本大学 文理学部
+        area: 哲学科
         studyType: 学士課程
+        location: 東京（桜上水）
+        url: https://www.chs.nihon-u.ac.jp/
         start_date: 2016-04
         end_date: 2020-03
-        location: 東京
     Awards:
       - title: 特に優れた業績による返還免除（半額免除）
         awarder: 日本学生支援機構
         date: 2022-06
+        summary: 修士課程在学中の第一種奨学金について
     Grants:
       - label: 2023–2025
         details: 日本学術振興会 科学研究費助成事業 特別研究員奨励費「善の相テーゼの系譜学―G．E．M．アンスコム研究を中心に―」（研究代表者）
     Teaching:
-      - label: 2026年度後期
-        details: 三重大学 人文学部「哲学概論A」（遠隔、全15回）非常勤講師
+      - label: 2026 年度後期
+        details: 三重大学 人文学部「哲学概論A」（遠隔、全 15 回）非常勤講師
       - label: 2024–2025
-        details: 東京大学フューチャーファカルティプログラム修了（第24期）
+        details: 東京大学フューチャーファカルティプログラム修了（第 24 期）
       - label: 2021–2022
         details: 東京大学 文学部 ティーチング・アシスタント
     Service:
@@ -75,15 +106,15 @@ cv:
         details: 古田徹也『謝罪論』×大谷弘『道徳的に考えるとはどういうことか』トークイベント（ESPACE BIBLIO、フィルカル制作部）企画・運営・司会
     Memberships:
       - label: 哲学会
-        details: 2025年–
+        details: 2025 年–
       - label: アメリカ哲学フォーラム
-        details: 2023年–
+        details: 2023 年–
       - label: 日本イギリス哲学会
-        details: 2023年–
+        details: 2023 年–
       - label: 日本哲学会
-        details: 2021年–
+        details: 2021 年–
       - label: 応用哲学会
-        details: 2021年–
+        details: 2021 年–
     Publications and Talks:
       - bullet: "論文・翻訳・書評など: [publications](/publications/)"
       - bullet: "学会発表・コメント: [talks](/talks/)"
