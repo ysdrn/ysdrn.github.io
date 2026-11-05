@@ -85,12 +85,12 @@
   margin-bottom: 0.25rem;
   a { color: inherit; text-decoration: none; &:hover { text-decoration: underline; } }
 }
-.diary-series-tag {
-  font-size: 0.8em;
+.diary-series-heading {
+  font-size: 14px;
+  font-weight: 500;
   color: var(--global-theme-color);
-  margin-left: 0.4rem;
-  text-decoration: none;
-  &:hover { text-decoration: underline; }
+  margin: 0.25rem 0 0.5rem;
+  a { color: inherit; text-decoration: none; &:hover { text-decoration: underline; } }
 }
 .diary-series-list {
   font-size: 14px;
