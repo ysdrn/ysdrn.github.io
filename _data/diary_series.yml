@@ -1,7 +1,7 @@
 # 日記のシリーズ。
-# 週ファイル（_diary/YYYY-MM-DD-WW.md）の front matter に `series: <key>` を書くと、
-# その週のページと /diary/ の一覧にシリーズ名が付き、/diary/<key>/ にそのシリーズだけの一覧ができる
-# （一覧ページは _plugins/diary_series.rb がここから作る）。
+# 週ファイル（_diary/YYYY-MM-DD-WW.md）の front matter に `series: <key>` を書く。
+# 画面には出さず、<title> と X カードの見出し（「博論日記 2026/11/09–15」）にだけ使う
+# （画面のラベルとシリーズ別一覧 /diary/<key>/ は 2026-11-05 に本人の希望でやめた）。
 # 新しいシリーズ（例: ポスドク日記）を始めるときは、ここに一件足して、その週から series を書く。
 # key は URL になるので ASCII 小文字。
 - key: dissertation

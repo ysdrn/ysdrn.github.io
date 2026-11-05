@@ -1,17 +1,12 @@
 {%- comment -%}
-日記の一覧。/diary/（全部）と /diary/<series>/（シリーズだけ）で共用。
+日記の一覧（/diary/）。
 notes（/blog/）と同じ post-list の形。
 題は front matter の title、なければ期間「2026/11/09–15」。メタ行は「2026w46 · 投稿日」（週の名前は ISO 年 + w + ISO 週番号）。
 title がある週は期間をメタ行に出す。
 （Jekyll は日付付きファイル名の文書に title を自動で入れる（slug の "46" など）ので、slug と同じ title は無いものとして扱う）
-シリーズ名は一覧には出さない（週ページの投稿日の下にだけ出す。本人の希望）。
-include.series を渡すとそのシリーズの週だけ出す。
+シリーズ名は画面には出さない（<title> と OG の見出しにだけ使う）。
 {%- endcomment -%}
-{% if include.series %}
-  {% assign sorted = site.diary | where: "series", include.series | sort: "date" | reverse %}
-{% else %}
-  {% assign sorted = site.diary | sort: "date" | reverse %}
-{% endif %}
+{% assign sorted = site.diary | sort: "date" | reverse %}
 {%- comment -%}
 左の目次（CV と同じテーマの tocbot。ページの front matter `toc: sidebar: left`）のために、
 年（h2）と月（h3）の見出しを各グループの先頭に置く。見出しは CSS で高さ 0 にして見せず、
