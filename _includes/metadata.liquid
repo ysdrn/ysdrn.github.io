@@ -299,7 +299,8 @@ title があればそれ、なければ「[シリーズ名 ]YYYY/MM/DD–DD」�
         {% if sameaslinks != blank %}
         "sameAs": {{ sameaslinks | jsonify }},
         {% endif %}
-        "name": "{{ author_name }}",
+        {%- comment -%} Local change: the WebSite's name is the site title (yoshidaren), not the author's name; a post's name is its title. {%- endcomment -%}
+        "name": {% if is_blog_post %}{{ page.title | jsonify }}{% else %}{{ title | jsonify }}{% endif %},
         "@context": "https://schema.org"
     }
   </script>
