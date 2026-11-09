@@ -41,6 +41,11 @@
     <!-- Title -->
     <div class="title">{{ entry.title }}</div>
     <!-- Author -->
+    {%- comment -%}
+      コメンテーター（abbr=コメンテーター）の項目では著者行を出さない。自分の名前は note の
+      「Commentators: …」の中に下線付きで出る（下の note の出力を参照）。
+    {%- endcomment -%}
+    {% unless entry.abbr == 'コメンテーター' %}
     <div class="author">
       {% assign author_array_size = entry.author_array | size %}
 
@@ -149,6 +154,7 @@
         </i>
       {% endif %}
     </div>
+    {% endunless %}
 
     <!-- Journal/Book title and date -->
     {%- comment -%}
@@ -211,8 +217,9 @@
       {{ parts | join: ', ' }}
     </div>
     {% if entry.note %}
+      {%- comment -%} note の中の自分の名前に、著者行の自分の名前と同じ下線を引く（em.self） {%- endcomment -%}
       <div class="periodical">
-        {{ entry.note | strip }}
+        {{ entry.note | strip | replace: 'Ren Yoshida', '<em class="self">Ren Yoshida</em>' | replace: '吉田廉', '<em class="self">吉田廉</em>' }}
       </div>
     {% endif %}
 

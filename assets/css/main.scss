@@ -230,6 +230,12 @@ h1.post-title i[class*="fa-"] {
   color: inherit;
 }
 
+// works: 自分の名前の下線（著者行の .author > em と同じ見た目）を note の中でも使う
+.publications ol.bibliography li .periodical em.self {
+  border-bottom: 1px solid;
+  font-style: normal;
+}
+
 // works: cover image column on the right
 .publications ol.bibliography li .preview-col {
   padding-top: 0.25rem;
