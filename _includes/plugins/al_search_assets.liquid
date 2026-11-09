@@ -1,0 +1,69 @@
+{%- comment -%}
+  Local override of al_search 1.0.3's include (the gem's file just runs {% al_search_assets %}).
+  2026-11-10: load the search UI (ninja-keys, ~40 unbundled lit modules) only when the visitor
+  asks for it — clicking the magnifier or pressing ⌘K / Ctrl+K — instead of on every page view.
+
+  How: the gem tag is still used for its markup and the inline `ninja.data = [...]` script
+  (that script runs before the custom element is defined; Lit keeps properties set before
+  upgrade, which is also how the theme worked when the module was merely deferred). The three
+  <script> tags the tag emits are stripped by exact string match and replaced by the small
+  loader below. If a gem upgrade changes those strings the scripts simply load eagerly again
+  (nothing breaks) — check `grep -c ninja-keys.min.js _site/index.html` after upgrading: it
+  should be 1 (the loader), not 2.
+{%- endcomment -%}
+{%- capture search_assets %}{% al_search_assets %}{% endcapture -%}
+{%- capture mod_tag %}<script type="module" src="{{ site.baseurl }}/assets/al_search/js/search/ninja-keys.min.js"></script>{% endcapture -%}
+{%- capture setup_tag %}<script src="{{ site.baseurl }}/assets/al_search/js/search-setup.js"></script>{% endcapture -%}
+{%- capture key_tag %}<script src="{{ site.baseurl }}/assets/al_search/js/shortcut-key.js"></script>{% endcapture -%}
+{{ search_assets | remove: mod_tag | remove: setup_tag | remove: key_tag }}
+<script>
+  (function () {
+    var loading = null;
+    var loadSearch = function () {
+      if (!loading) {
+        loading = new Promise(function (resolve, reject) {
+          var s = document.createElement("script");
+          s.type = "module";
+          s.src = "{{ '/assets/al_search/js/search/ninja-keys.min.js' | relative_url }}";
+          s.onload = resolve;
+          s.onerror = reject;
+          document.head.appendChild(s);
+        }).then(function () {
+          return customElements.whenDefined("ninja-keys");
+        });
+      }
+      return loading;
+    };
+    var openSearch = function () {
+      // 折りたたみメニューが開いていれば閉じる（テーマの search-setup.js と同じ）
+      var nav = document.getElementById("navbarNav");
+      if (nav && nav.classList.contains("show")) {
+        var toggle = document.querySelector('[data-nav-toggle="navbarNav"]');
+        if (toggle) toggle.click();
+      }
+      loadSearch()
+        .then(function () {
+          var el = document.querySelector("ninja-keys");
+          if (el && typeof el.open === "function") el.open();
+        })
+        .catch(function () {});
+    };
+    window.openSearchModal = openSearch;
+    var button = document.getElementById("search-toggle");
+    if (button) {
+      button.addEventListener("click", function (event) {
+        event.preventDefault();
+        openSearch();
+      });
+    }
+    // 読み込み前の ⌘K / Ctrl+K。読み込み後は ninja-keys 自身のホットキーに任せる
+    var onKey = function (event) {
+      if ((event.metaKey || event.ctrlKey) && !event.altKey && (event.key === "k" || event.key === "K")) {
+        event.preventDefault();
+        document.removeEventListener("keydown", onKey);
+        openSearch();
+      }
+    };
+    document.addEventListener("keydown", onKey);
+  })();
+</script>
