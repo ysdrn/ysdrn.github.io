@@ -46,6 +46,16 @@
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
+// テーマは `p, h1, h2, h3, em, div, li, span, strong { color: var(--global-text-color) }` と書いていて、
+// リンクの中の斜体・太字・span だけ黒くなる（例: notes の文献リストの書名）。リンクの色を継がせる。
+a em,
+a strong,
+a span,
+a i,
+a b {
+  color: inherit;
+}
+
 // 薄い文字色: テーマの #828282 は白地で 3.6:1 しかない（WCAG AA は 4.5:1）。#6b6b6b で 5.3:1。
 // 使われる場所: プロフィール欄のラベル、日記の投稿日・日付ナビ、一覧のメタ行、post-meta。
 :root {
