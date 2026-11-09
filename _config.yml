@@ -107,7 +107,7 @@ pagination:
   enabled: true
 
 related_blog_posts:
-  enabled: true
+  enabled: false # 2026-11-10 記事末尾の英語の「Enjoy Reading This Article?」欄は出さない
   max_related: 5
 
 giscus:
