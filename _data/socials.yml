@@ -1,5 +1,6 @@
 email: yoshidaren@gmail.com
 rss_icon: true
+x_username: aglossia_ # Schema.org の sameAs 用（アイコンは enable_navbar_social: false なので出ない）
 custom_social:
   logo: fa-solid fa-r
   title: researchmap

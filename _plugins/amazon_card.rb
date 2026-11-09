@@ -126,8 +126,9 @@ module AmazonCard
       image  = item['image']
 
       author_html = author.empty? ? '' : %(\n    <span class="amazon-card-author">#{CGI.escapeHTML(author)}</span>)
+      # 書影のリンクは本文リンクと同じ先なので、支援技術からは隠す（名前のないリンクにしない）
       image_html = if image
-        %(\n  <a class="amazon-card-image" href="#{href}" rel="noopener nofollow sponsored" target="_blank">) +
+        %(\n  <a class="amazon-card-image" href="#{href}" rel="noopener nofollow sponsored" target="_blank" aria-hidden="true" tabindex="-1">) +
         %(<span style="background-image:url(#{CGI.escapeHTML(image)})"></span></a>)
       else
         ''

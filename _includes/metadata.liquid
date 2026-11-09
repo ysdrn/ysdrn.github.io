@@ -1,3 +1,11 @@
+{%- comment -%}
+  Local override of al_folio_core 1.0.15 _includes/metadata.liquid. Differences from the theme file:
+    - diary weeks: <title> / og:title / twitter:title from the week range or front-matter title
+    - og_title front matter controls the card heading; twitter:card stays "summary"
+    - meta_description: one stripped description for <meta>, OG, Twitter and JSON-LD (fixes invalid JSON-LD from the folded site.description)
+    - og:locale ja_JP; a Person JSON-LD block on the top page; jsonify in the WebSite block (2026-11-10)
+  When upgrading the theme: diff against the gem's copy and re-apply these.
+{%- endcomment -%}
 {% if site.enable_google_verification or site.enable_bing_verification %}
   <!-- Website verification -->
   {% if site.enable_google_verification %}
@@ -14,6 +22,11 @@
   <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
 {% endif %}
 
+{%- comment -%}
+  Local addition: one description for <meta>, OpenGraph, Twitter and JSON-LD.
+  site.description is a folded YAML block and ends with a newline, which made the JSON-LD invalid.
+{%- endcomment -%}
+{% assign meta_description = page.description | default: site.description | strip_newlines | strip %}
 {% capture author_name %}{{ site.first_name }}{% if site.middle_name %} {{ site.middle_name }}{% endif %} {{ site.last_name }}{% endcapture %}
 
 <!-- Standard metadata -->
@@ -61,7 +74,7 @@ title があればそれ、なければ「[シリーズ名 ]YYYY/MM/DD–DD」�
   {% endif %}
 </title>
 <meta name="author" content="{{ author_name }}">
-<meta name="description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
+<meta name="description" content="{{ meta_description }}">
 {% if page.keywords or site.keywords %}
   <meta name="keywords" content="{% if page.keywords %}{{ page.keywords }}{% else %}{{ site.keywords }}{% endif %}">
 {% endif %}
@@ -80,7 +93,7 @@ title があればそれ、なければ「[シリーズ名 ]YYYY/MM/DD–DD」�
   {%- comment -%} Local override: a page may set og_title in its front matter to control the card heading (used by the top page). {%- endcomment -%}
   <meta property="og:title" content="{% if page.og_title %}{{ page.og_title }}{% elsif diary_heading %}{{ diary_heading }} | diary of Ren Yoshida{% elsif page.title %}{{ title }} | {{ page.title }}{% else %}{{ title }}{% endif %}">
   <meta property="og:url" content="{{ page.url | prepend: site.baseurl | prepend: site.url | remove_first: 'index.html' }}">
-  <meta property="og:description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
+  <meta property="og:description" content="{{ meta_description }}">
   {% if page.og_image or site.og_image %}
     {% assign og_image_source = page.og_image | default: site.og_image %}
     {% if og_image_source contains '://' %}
@@ -90,13 +103,14 @@ title があればそれ、なければ「[シリーズ名 ]YYYY/MM/DD–DD」�
     {% endif %}
     <meta property="og:image" content="{{ og_image_url }}">
   {% endif %}
-  <meta property="og:locale" content="{{ site.lang }}">
+  {%- comment -%} og:locale は言語_地域 の形（ja → ja_JP） {%- endcomment -%}
+  <meta property="og:locale" content="{% if site.lang == 'ja' %}ja_JP{% else %}{{ site.lang }}{% endif %}">
 
   <!-- Twitter card -->
   {%- comment -%} Local override of the theme include (see og_title above). Keep the small "summary" card: the owner does not want the large image. {%- endcomment -%}
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="{% if page.og_title %}{{ page.og_title }}{% elsif diary_heading %}{{ diary_heading }} | diary of Ren Yoshida{% elsif page.title %}{{ page.title }}{% else %}{{ title }}{% endif %}">
-  <meta name="twitter:description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
+  <meta name="twitter:description" content="{{ meta_description }}">
   {% if page.og_image or site.og_image %}
     <meta name="twitter:image" content="{{ og_image_url }}">
   {% endif %}
@@ -256,6 +270,21 @@ title があればそれ、なければ「[シリーズ名 ]YYYY/MM/DD–DD」�
     {% endcase %}
   {% endfor %}
 
+  {%- comment -%} Local addition: a Person entity on the top page (name in both scripts; sameAs = the links built from _data/socials.yml above: researchmap and X). {%- endcomment -%}
+  {% if page.url == '/' %}
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "@id": "{{ site.url }}{{ site.baseurl }}/#person",
+        "name": "吉田廉",
+        "alternateName": "{{ author_name }}",
+        "url": "{{ site.url }}{{ site.baseurl }}/",
+        "description": {{ site.description | strip_newlines | strip | jsonify }},
+        "sameAs": {{ sameaslinks | jsonify }}
+      }
+    </script>
+  {% endif %}
   <script type="application/ld+json">
     {
         "author":
@@ -265,8 +294,8 @@ title があればそれ、なければ「[シリーズ名 ]YYYY/MM/DD–DD」�
         },
         "url": "{{ page.url | prepend: site.baseurl | prepend: site.url }}",
         "@type": "{% if is_blog_post %}BlogPosting{% else %}WebSite{% endif %}",
-        "description": "{% if page.description %}{{ page.description }}{% else if site.description %}{{ site.description }}{% endif %}",
-        "headline": "{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}",
+        "description": {{ meta_description | jsonify }},
+        "headline": {% if page.title %}{{ page.title | jsonify }}{% else %}{{ site.title | jsonify }}{% endif %},
         {% if sameaslinks != blank %}
         "sameAs": {{ sameaslinks | jsonify }},
         {% endif %}

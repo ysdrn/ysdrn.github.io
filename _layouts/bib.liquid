@@ -1,5 +1,13 @@
 ---
 ---
+{%- comment -%}
+  Local override of al_folio_core 1.0.15 _layouts/bib.liquid. Differences from the theme file:
+    - every bib field is printed in Japanese bibliographic style (『』, 第N号, 頁, 大会名（会場）)
+    - cover image column on the right (preview-col), badge colours from _data/venues.yml
+    - extra link buttons: publisher_url (出版社), amazon (ASIN + ?tag=aglossian-22), program
+    - cover <img>: alt = entry.title, loading=lazy, WebP srcset enabled (2026-11-10)
+  When upgrading the theme: diff against the gem's copy and re-apply these.
+{%- endcomment -%}
 <div class="row">
   {% if site.enable_publication_thumbnails %}
     <div class="col col-sm-2 abbr">
@@ -450,15 +458,19 @@
           <img class="preview z-depth-1 rounded" src="{{ entry.preview }}">
         {% else %}
           {% assign entry_path = entry.preview | prepend: '/assets/img/publication_preview/' %}
+          {%- comment -%}
+            alt は書名（元はファイル名）。書影は下の方にあるので lazy。
+            avoid_scaling は付けない: 付けると figure.liquid が WebP の srcset（imagemagick.widths の 240/480/800/1400）を出さず、
+            元の JPEG だけになる（2026-11-10 まではそうなっていた）。
+          {%- endcomment -%}
           {%
             include figure.liquid
-            loading="eager"
+            loading="lazy"
             path=entry_path
             sizes = "200px"
             class="preview z-depth-1 rounded"
             zoomable=true
-            avoid_scaling=true
-            alt=entry.preview
+            alt=entry.title
           %}
         {% endif %}
       {% endif %}

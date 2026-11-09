@@ -26,16 +26,84 @@
 @use "teachings";
 @use "typograms";
 
-#search-toggle .nav-link {
-  font-size: 0;
+// Inter（欧文）は自前配信。Google Fonts の latin / latin-ext と同じ可変フォント（100–900）と unicode-range。
+// ファイルは assets/fonts/、ライセンスは同じ場所の LICENSE-Inter.txt（OFL 1.1）。
+// 仮名漢字は unicode-range に含まれないので、後ろの和文フォント（ヒラギノ → Noto Sans JP）に落ちる。
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/assets/fonts/inter-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
-#search-toggle .nav-link i {
-  font-size: 1rem;
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/assets/fonts/inter-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+// 薄い文字色: テーマの #828282 は白地で 3.6:1 しかない（WCAG AA は 4.5:1）。#6b6b6b で 5.3:1。
+// 使われる場所: プロフィール欄のラベル、日記の投稿日・日付ナビ、一覧のメタ行、post-meta。
+:root {
+  --global-text-color-light: #6b6b6b;
+}
+
+// 検索ボタン: アイコンはインライン SVG（_includes/header.liquid）。
+// テーマの shortcut-key.js が Mac で .nav-link の中身を「⌘ k <i>」に書き換えるので、.nav-link は空のまま隠す。
+#search-toggle {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px;
+  color: var(--global-text-color);
+}
+#search-toggle:hover,
+#search-toggle:focus-visible {
+  color: var(--global-theme-color);
+}
+#search-toggle .nav-link {
+  display: none;
+}
+#search-toggle .search-icon {
+  display: block;
+  width: 1rem;
+  height: 1rem;
 }
 
 @media (min-width: 576px) {
   #search-toggle {
     transform: translateY(4px);
+  }
+}
+
+// コードブロックのコピーボタン（テーマの copy_code.js）は Font Awesome のアイコンを入れる。
+// FA を読まないので、文字で代用する（今のところコードブロックはないが、notes に書いたとき空のボタンにならないように）。
+button.copy i {
+  font-style: normal;
+}
+button.copy .fa-clipboard::before {
+  content: "copy";
+}
+button.copy .fa-clipboard-check::before {
+  content: "copied";
+}
+
+// テーマの post.liquid / archive.liquid（上書きしていない）が年リンクや記事見出しの前に置くカレンダー・タグの
+// アイコン <i class="fa-..."> は、FA を読まないので空になる。残る空白を消すために隠す。
+.post-tags i[class*="fa-"],
+.post-meta i[class*="fa-"],
+h1.post-title i[class*="fa-"] {
+  display: none;
+}
+
+// 折りたたみメニュー（576px 未満）では他の項目と同じ左端・高さに揃える
+@media (max-width: 575.98px) {
+  #search-toggle {
+    padding: 8px 0;
+    min-height: 40px;
   }
 }
 
@@ -113,7 +181,8 @@
     small { margin-left: 4px; font-size: 0.85em; }
   }
 }
-@media (max-width: 700px) {
+// 760px 未満では左の固定配置（calc(50% - 370px)）が画面左端に張り付くので、上の横並びに切り替える
+@media (max-width: 760px) {
   .diary-days-nav {
     position: static;
     transform: none;

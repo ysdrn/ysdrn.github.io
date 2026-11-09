@@ -16,7 +16,7 @@ icon: 📖
 url: https://ysdrn.github.io
 baseurl:
 last_updated: false
-back_to_top: true
+back_to_top: false # 2026-11-10 性能のため停止（同期読み込みの外部 JS だった）
 future: true
 
 # -----------------------------------------------------------------------------
@@ -182,7 +182,7 @@ plugins:
   - jekyll-feed
   - jekyll-get-json
   - jekyll-imagemagick
-  - jekyll-jupyter-notebook
+  - jekyll-jupyter-notebook # 未使用。CI は nbconvert を入れないので .ipynb を置いても描画されない
   - jekyll-link-attributes
   - jekyll-minifier
   - jekyll-paginate-v2
@@ -196,7 +196,7 @@ plugins:
   - jekyll-twitter-plugin
   - jemoji
   - al_folio_core
-  - al_icons
+  # - al_icons  # 2026-11-10 外した: アイコンフォント CSS（FA 等）を一切出さないため。下の third_party_libraries の url.css 空欄は保険
   - al_folio_cv
   - al_folio_distill
   - al_folio_upgrade
@@ -229,6 +229,7 @@ defaults:
 
 sass:
   style: compressed
+  sourcemap: never # main.css.map（70KB）を配信しない
 
 # -----------------------------------------------------------------------------
 # Jekyll Minifier
@@ -348,6 +349,7 @@ external_links:
 imagemagick:
   enabled: true
   widths:
+    - 240 # 書影（表示幅 110px）用
     - 480
     - 800
     - 1400
@@ -378,7 +380,7 @@ enable_darkmode: false
 enable_navbar_social: false
 enable_project_categories: false
 enable_medium_zoom: true
-enable_progressbar: true
+enable_progressbar: false # 2026-11-10 性能のため停止
 enable_video_embedding: false
 
 # -----------------------------------------------------------------------------
@@ -395,17 +397,21 @@ third_party_libraries:
       css: "https://cdn.jsdelivr.net/npm/bootstrap-table@{{version}}/dist/bootstrap-table.min.css"
       js: "https://cdn.jsdelivr.net/npm/bootstrap-table@{{version}}/dist/bootstrap-table.min.js"
     version: "1.22.4"
+  # 2026-11-10: アイコン CSS 3 本（Font Awesome / Academicons / Scholar Icons）は読まない。
+  # 使っていたのは虫眼鏡だけで、_includes/header.liquid にインライン SVG で置いた。
+  # url.css を空にすると al_icons プラグインが <link> を出さない。戻すときは元の URL を書く:
+  #   https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@{{version}}/css/all.min.css
   fontawesome:
     integrity:
       css: "sha256-MVopmdyC2tYTiJ8wlktf0uh0v4NgT+vNdyVFepi7Q0c="
     url:
-      css: "https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@{{version}}/css/all.min.css"
+      css: ""
     version: "7.2.0"
   academicons:
     integrity:
       css: "sha256-SzrCOBJbGVFMahewkgjwnApaV2+av1DwMAA+/QGLyZw="
     url:
-      css: "https://cdn.jsdelivr.net/npm/academicons@{{version}}/css/academicons.min.css"
+      css: "" # 元: https://cdn.jsdelivr.net/npm/academicons@{{version}}/css/academicons.min.css
     version: "1.9.5"
   chartjs:
     integrity:
@@ -437,9 +443,12 @@ third_party_libraries:
         library: "https://cdn.jsdelivr.net/npm/echarts@{{version}}/dist/echarts.min.js"
         dark_theme: "https://cdn.jsdelivr.net/npm/echarts@{{version}}/theme/dark-fresh-cut.js"
     version: "5.5.0"
+  # 2026-11-10: Inter は assets/fonts/ に自前で置いた（assets/css/main.scss の @font-face）。
+  # Google Fonts から読むのは Noto Sans JP だけ（ヒラギノのない端末用）。
+  # この CSS は 300KB 超で描画を止めていたので、_includes/head.liquid で非同期に読む。
   google_fonts:
     url:
-      fonts: "https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Noto+Sans+JP:wght@400;500;700&display=swap"
+      fonts: "https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap"
   highlightjs:
     integrity:
       css:
@@ -542,7 +551,7 @@ third_party_libraries:
     integrity:
       css: "sha256-VY3hHVj/hNX3fYG6wtbA6TcKJQl7+FthzGSyIB64klY="
     url:
-      css: "https://cdn.jsdelivr.net/npm/scholar-icons@{{version}}/css/scholar-icons.css"
+      css: "" # 元: https://cdn.jsdelivr.net/npm/scholar-icons@{{version}}/css/scholar-icons.css
     version: "1.0.3"
   vanilla-back-to-top:
     integrity:

@@ -3,7 +3,7 @@ layout: page
 permalink: /publications/
 title: publications
 og_title: publications of Ren Yoshida
-description:
+description: 吉田廉の論文・翻訳・書評・対談などの一覧。
 nav: true
 nav_order: 2
 ---

@@ -1,3 +1,8 @@
+{%- comment -%}
+  Local override of al_folio_core 1.0.15 _includes/header.liquid. Differences from the theme file:
+    - search button: inline SVG magnifier instead of the Font Awesome icon (2026-11-10)
+  When upgrading the theme: diff against the gem's copy and re-apply these.
+{%- endcomment -%}
 <header>
   <!-- Nav Bar -->
   <nav id="navbar" class="navbar navbar-light navbar-expand-sm {% if site.navbar_fixed %}fixed-top{% else %}sticky-top{% endif %}" role="navigation">
@@ -114,8 +119,14 @@
           {% if site.search_enabled %}
             <!-- Search -->
             <li class="nav-item">
+              {%- comment -%}
+                虫眼鏡はインライン SVG（Font Awesome は読まない。_config.yml の fontawesome.url.css 参照）。
+                テーマの shortcut-key.js が Mac で `.nav-link` の中身を「⌘ k <i>」に書き換えるので、
+                .nav-link は空のまま CSS で隠し、SVG はその外に置く（assets/css/main.scss の #search-toggle）。
+              {%- endcomment -%}
               <button id="search-toggle" type="button" title="Search" aria-label="Open search">
-                <span class="nav-link"><i class="fa-solid fa-magnifying-glass"></i></span>
+                <span class="nav-link"></span>
+                <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.9-4.9"/></svg>
               </button>
             </li>
           {% endif %}
