@@ -3,7 +3,7 @@ layout: page
 permalink: /talks/
 title: talks
 og_title: talks of Ren Yoshida
-description: 吉田廉の学会・研究会での発表とコメントの一覧。
+description:
 nav: true
 nav_order: 3
 ---
