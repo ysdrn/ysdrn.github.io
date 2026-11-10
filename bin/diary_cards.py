@@ -10,6 +10,7 @@
 Mac で実行する（Pillow とヒラギノ角ゴシックが要る。CI では作らない）:
     python3 bin/diary_cards.py            # 変わった週だけ
     python3 bin/diary_cards.py --force    # 全部作り直す
+    python3 bin/diary_cards.py --check    # CI 用。足りない・古いカードを警告するだけ（Pillow 不要）
 pre-commit hook（.githooks/pre-commit）が --quiet で自動実行する。Pillow がなければ何もしない。
 
 2026-11-10 作成（最初は notes 用に作り、同日 diary 用に移した）。見た目の数値は下の定数。
@@ -175,7 +176,48 @@ def render(src, title, out, subtitle=None):
     base.save(out, "JPEG", quality=85, optimize=True, progressive=True)
 
 
+def entries():
+    """cover のある週: (週ファイル, cover, 題, 期間の行 or None, 写真のパス, 控えのキー)。写真がない週はキーが None"""
+    for post in sorted(DIARY.glob("*.md")):
+        fm = front_matter(post)
+        cover = fm.get("cover")
+        if not cover:
+            continue
+        span = week_range(fm.get("date") or post.name[:10])
+        title = fm.get("title") or span
+        subtitle = span if fm.get("title") else None  # 題のない週は期間が題なので二行目は付けない
+        src = SRC_DIR / cover
+        key = None
+        if src.exists():
+            key = hashlib.md5(f"{VERSION}\n{title}\n{subtitle}\n".encode() + src.read_bytes()).hexdigest()
+        yield post, cover, title, subtitle, src, key
+
+
+def check():
+    """CI 用（Pillow 不要）。写真・カードがない週、題や写真が変わったのにカードが古い週を GitHub の警告で出す。
+    ページの側はカードが合わない週を小さいカードに戻すので（_includes/metadata.liquid）、壊れはしない"""
+    manifest = json.loads(MANIFEST.read_text(encoding="utf-8")) if MANIFEST.exists() else {}
+    problems = 0
+    for post, cover, title, subtitle, src, key in entries():
+        where = f"_diary/{post.name}"
+        if key is None:
+            msg = f"写真がない: assets/img/diary/{cover}。週ページの題の上に写真が出ない"
+        elif not (OUT_DIR / cover).exists():
+            msg = f"カードがない: assets/img/diary/card/{cover}（Mac で python3 bin/diary_cards.py を実行して commit）。SNS では小さいカードになる"
+        elif manifest.get(cover, {}).get("key") != key:
+            msg = f"カードが古い（題か写真が変わった）: {cover}（Mac で python3 bin/diary_cards.py を実行して commit）。題が変わった週は SNS で小さいカードになる"
+        else:
+            continue
+        problems += 1
+        print(f"::warning file={where}::diary_cards: {msg}")
+    if not problems:
+        print("diary_cards: カードはすべて最新")
+    return 0
+
+
 def main():
+    if "--check" in sys.argv:
+        return check()
     force = "--force" in sys.argv
     quiet = "--quiet" in sys.argv
     try:
@@ -191,22 +233,13 @@ def main():
 
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8")) if MANIFEST.exists() else {}
     seen, made = set(), []
-    for post in sorted(DIARY.glob("*.md")):
-        fm = front_matter(post)
-        cover = fm.get("cover")
-        if not cover:
-            continue
-        span = week_range(fm.get("date") or post.name[:10])
-        title = fm.get("title") or span
-        subtitle = span if fm.get("title") else None  # 題のない週は期間が題なので二行目は付けない
-        src = SRC_DIR / cover
-        if not src.exists():
+    for post, cover, title, subtitle, src, key in entries():
+        if key is None:
             print(f"diary_cards: 写真がない: {src.relative_to(ROOT)}（{post.name}）")
             continue
         seen.add(cover)
-        key = hashlib.md5(f"{VERSION}\n{title}\n{subtitle}\n".encode() + src.read_bytes()).hexdigest()
         out = OUT_DIR / cover
-        if not force and manifest.get(cover, {}).get("key") == key and out.exists():
+        if "--force" not in sys.argv and manifest.get(cover, {}).get("key") == key and out.exists():
             continue
         render(src, title, out, subtitle)
         manifest[cover] = {"title": title, "subtitle": subtitle, "key": key}

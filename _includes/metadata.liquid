@@ -95,13 +95,25 @@ title があればそれ、なければ「[シリーズ名 ]YYYY/MM/DD–DD」�
   <meta property="og:url" content="{{ page.url | prepend: site.baseurl | prepend: site.url | remove_first: 'index.html' }}">
   <meta property="og:description" content="{{ meta_description }}">
   {%- comment -%} diary の週で front matter に cover があれば、題入りのカード画像（bin/diary_cards.py、1280×670）を大きいカードで出す（2026-11-10、本人の選択）。ほかのページは今までどおり正方形の画像と小さいカード {%- endcomment -%}
+  {%- comment -%}
+    カードが使えるのは、画像があって、控え（_data/diary_cards.json）の題がいまの題と同じとき。
+    Mac 以外（GitHub のウェブ画面など）から commit してカードが作られていない・古い週は、今までの正方形の画像と小さいカードに戻す
+  {%- endcomment -%}
   {% assign og_large = false %}
+  {% assign og_image_source = nil %}
   {% if page.cover and page.collection == 'diary' %}
-    {% assign og_image_source = page.cover | prepend: '/assets/img/diary/card/' %}
-    {% assign og_large = true %}
-  {% else %}
-    {% assign og_image_source = page.og_image | default: site.og_image %}
+    {% capture card_path %}/assets/img/diary/card/{{ page.cover }}{% endcapture %}
+    {% assign card_file = site.static_files | where: "path", card_path | first %}
+    {% assign card_meta = site.data.diary_cards[page.cover] %}
+    {% if page.title and page.title != "" and page.title != page.slug %}{% assign card_expect = page.title %}{% else %}{% assign card_expect = d_range %}{% endif %}
+    {% if card_file and card_meta and card_meta.title == card_expect %}
+      {% assign og_image_source = card_path %}
+      {% assign og_large = true %}
+    {% endif %}
   {% endif %}
+  {% unless og_large %}
+    {% assign og_image_source = page.og_image | default: site.og_image %}
+  {% endunless %}
   {% if og_image_source %}
     {% if og_image_source contains '://' %}
       {% assign og_image_url = og_image_source %}

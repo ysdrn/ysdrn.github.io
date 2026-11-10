@@ -50,7 +50,8 @@ layout: default
   </nav>
 
   {%- comment -%} front matter の cover（assets/img/diary/ の写真）があれば題の上に出す。題が二度続かないよう、題の入っていない元の写真（SNS は題入りのカード、bin/diary_cards.py）。2026-11-10 {%- endcomment -%}
-  {% if page.cover %}
+  {% if page.cover %}{% capture cover_path %}/assets/img/diary/{{ page.cover }}{% endcapture %}{% assign cover_file = site.static_files | where: "path", cover_path | first %}{% endif %}
+  {% if page.cover and cover_file %}
     <figure class="week-cover"><img src="{{ page.cover | prepend: '/assets/img/diary/' | relative_url }}" width="1280" height="670" alt=""></figure>
   {% endif %}
 

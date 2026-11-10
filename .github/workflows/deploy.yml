@@ -35,6 +35,8 @@ jobs:
         run: npm ci
       - name: Check Amazon card cache
         run: ruby bin/amazon_cache.rb --check --warn
+      - name: Check diary cards
+        run: python3 bin/diary_cards.py --check # 写真・カードがない週、古いカードを警告するだけ（ページは小さいカードに戻る）
       - name: Install and Build
         run: |
           sudo apt-get update && sudo apt-get install -y imagemagick
