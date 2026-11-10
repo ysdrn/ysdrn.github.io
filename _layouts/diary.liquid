@@ -6,7 +6,7 @@ layout: default
 {% assign end_ts = start_ts | plus: 518400 %}
 {% assign start_month = start_ts | date: "%m" %}
 {% assign end_month = end_ts | date: "%m" %}
-{%- comment -%} 題は title、なければ期間。右上は「diary / 2026week46」と「投稿日：YYYY年M月D日」の二行（title がある週は一行目に期間も）（_includes/diary_list.liquid と同じ規則） {%- endcomment -%}
+{%- comment -%} 題は title、なければ期間。上のナビの真ん中は「diary / 2026week46」（diary は一覧へのリンク）。title がある週は期間を題の下に副題として出す。見出しの右下は「投稿日：YYYY年M月D日」だけ（2026-11-10、本人「過剰」で一行にした） {%- endcomment -%}
 {% capture week_id %}{{ page.date | date: "%G" }}w{{ page.date | date: "%V" | plus: 0 }}{% endcapture %}
 {% capture week_range %}{{ start_ts | date: "%Y/%m/%d" }}–{% if start_month == end_month %}{{ end_ts | date: "%d" }}{% else %}{{ end_ts | date: "%m/%d" }}{% endif %}{% endcapture %}
 {% if page.title and page.title != "" and page.title != page.slug %}{% assign page_title = page.title %}{% else %}{% assign page_title = nil %}{% endif %}
@@ -39,7 +39,7 @@ layout: default
     {% else %}
       <span class="diary-nav-prev"></span>
     {% endif %}
-    <a href="{{ '/diary/' | relative_url }}" class="diary-nav-index">diary</a>
+    <span class="diary-nav-index"><a href="{{ '/diary/' | relative_url }}">diary</a> / {{ page.date | date: "%G" }}week{{ page.date | date: "%V" | plus: 0 }}</span>
     {% if next_entry %}
       <a href="{{ next_entry.url | relative_url }}" class="diary-nav-next">
         {{ next_entry.date | date: "%G" }}w{{ next_entry.date | date: "%V" | plus: 0 }} →
@@ -51,8 +51,9 @@ layout: default
 
   <header class="post-header">
     <h1 class="post-title">{% if page_title %}{{ page_title }}{% else %}{{ week_range }}{% endif %}</h1>
-    {%- comment -%} 右寄せ二行: 「2026w46」（title がある週は期間も）と「投稿日：2026年11月9日」。シリーズ名は出さない（本人の希望） {%- endcomment -%}
-    <p class="diary-posted"><a href="{{ '/diary/' | relative_url }}">diary</a> / {{ page.date | date: "%G" }}week{{ page.date | date: "%V" | plus: 0 }}{% if page_title %} &nbsp;&middot;&nbsp; {{ week_range }}{% endif %}<br>投稿日：{{ page.date | date: "%Y年%-m月%-d日" }}</p>
+    {% if page_title %}<p class="diary-subtitle">{{ week_range }}</p>{% endif %}
+    {%- comment -%} 右寄せは投稿日だけ。週の名前は上のナビ、期間は副題（題がない週は題そのもの）。シリーズ名は出さない（本人の希望） {%- endcomment -%}
+    <p class="diary-posted">投稿日：{{ page.date | date: "%Y年%-m月%-d日" }}</p>
     {% if page.description and page.description != "" %}
       <p class="post-description">{{ page.description }}</p>
     {% endif %}
@@ -84,7 +85,7 @@ layout: default
     {% else %}
       <span class="diary-nav-prev"></span>
     {% endif %}
-    <a href="{{ '/diary/' | relative_url }}" class="diary-nav-index">diary</a>
+    <span class="diary-nav-index"><a href="{{ '/diary/' | relative_url }}">diary</a> / {{ page.date | date: "%G" }}week{{ page.date | date: "%V" | plus: 0 }}</span>
     {% if next_entry %}
       <a href="{{ next_entry.url | relative_url }}" class="diary-nav-next">
         {{ next_entry.date | date: "%G" }}w{{ next_entry.date | date: "%V" | plus: 0 }} →

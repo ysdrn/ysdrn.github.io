@@ -184,6 +184,14 @@ h1.post-title i[class*="fa-"] {
 .diary-nav-next { text-align: right; }
 .diary-nav-index {
   font-weight: 500;
+  color: var(--global-text-color-light); // diary の週ページでは「diary / 2026week46」（diary だけリンク）
+}
+// diary の週ページで題があるとき、題の下に期間を副題として出す（_layouts/diary.liquid）
+.diary-subtitle {
+  margin: -0.25rem 0 0.75rem;
+  font-size: 1.125rem;
+  letter-spacing: 0.04em;
+  color: var(--global-text-color-light);
 }
 // notes の前後ナビは記事の題を出すので長い。三等分の真ん中に notes を置き、題は一行で末尾を…にする
 .note-nav {
