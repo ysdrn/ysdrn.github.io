@@ -6,8 +6,7 @@ title: yoshidaren
 first_name: Ren
 last_name: Yoshida
 contact_note:
-description: >
-  吉田廉のウェブサイト。行為の哲学・アンスコム研究を中心に、業績とブログを掲載しています。
+description: 哲学者です。 # 2026-11-10 本人の文面（以前の説明文は「ふざけた詳細」として本人がやめた）
 footer_text:
 keywords: philosophy, ethics, Anscombe, Wittgenstein, Williams
 lang: ja
@@ -83,7 +82,7 @@ max_width: 930px
 
 serve_og_meta: true
 serve_schema_org: true
-og_image: /assets/img/og-default.png
+og_image: /assets/img/og-default.png?v=2 # ?v= は X などのキャッシュよけ。画像は bin/og_default.py で作る
 x_username: aglossia_ # twitter:site / twitter:creator
 
 # -----------------------------------------------------------------------------

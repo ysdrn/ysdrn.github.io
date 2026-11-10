@@ -135,7 +135,7 @@ h1.post-title i[class*="fa-"] {
 // 記事ページ（diary の週・notes の記事）の文字組みを note に寄せる（2026-11-10、本人「題に威圧感がある」）。
 // note（2026-11 計測）: 題 32px・太さ 700・行の高さ 1.5・字間 0.04em・palt、本文 18px・行の高さ 2。
 // 以前のこちら: 題 40px・行の高さ 1.2・字間なし、記事内の h2 32px、本文 16px・行の高さ 1.5（題が本文の 2.5 倍で、二行の題が黒い塊に見えた）。
-// 太さはサイトの見出しと同じ 500 のまま。本文の文字の大きさ（16px）は変えず、行の高さだけ広げる。
+// 太さはサイトの見出しと同じ 500 のまま。本文（16px・行の高さ 1.5）は変えない（一度 note に合わせて 1.9 にしたが、開きすぎで本人が戻した）。
 .diary-content {
   .post-header {
     margin-top: 2rem;
@@ -147,7 +147,6 @@ h1.post-title i[class*="fa-"] {
     font-feature-settings: "palt" 1;
   }
   .post-content {
-    p, li { line-height: 1.9; }
     h2, h3 {
       letter-spacing: 0.04em;
       font-feature-settings: "palt" 1;
