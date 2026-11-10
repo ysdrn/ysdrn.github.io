@@ -3,7 +3,7 @@ layout: note
 title: アンスコム『インテンション』を読むための文献案内
 date: 2022-04-24
 description:
-tags:
+tags: [アンスコム, 文献案内]
 categories:
 ---
 
