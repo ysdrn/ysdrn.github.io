@@ -2,40 +2,35 @@
 layout: default
 ---
 {%- comment -%}
-notes の一覧（/blog/、_pages/blog.md）。2026-11-10 に diary の一覧と同じ二段組にした。
-diary は左にテーマの目次（tocbot、年・月）を出すが、notes は左にタグのナビを出す（本人の希望）。
+notes の一覧（/blog/、_pages/blog.md）。2026-11-10 に作った。左にタグのナビを出す（本人の希望）。
+一覧も記事ページと同じ 620px の中央の枠（.diary-content）に入れ、タグのナビは記事の見出しナビ（.note-toc）と同じ位置・見た目にする
+（一覧から記事を開いたとき本文の幅と左端が変わらないように。最初はテーマの二段組で右の列が約 700px あり、開くと幅が変わった）。
 - ナビは site.tags から作る（名前順、件数つき）。先頭は「すべて」。タグが一つもなければナビは出さない
 - クリックすると一覧をその場で絞り込む（ページ遷移なし）。URL は /blog/#tag=<slug>。記事ページ・一覧のメタ行のタグもここへリンクする
 - 絞り込みは一覧の <li data-tags="slug,slug">（区切りは , 。空白はビルドで詰められる） を隠すだけなので、ページ送りはしない（全件を一枚に出す。diary の一覧と同じ）
-- 見た目はテーマの目次（#toc-sidebar）に合わせる。CSS は main.scss の #notes-tag-nav
+- CSS は main.scss の #notes-tag-nav（.note-toc と同じ数値）
 toc.sidebar を使わないのは、テーマの common.js が #toc-sidebar の中身を見出しの目次で上書きするため。
 {%- endcomment -%}
 {% assign sorted_tags = site.tags | sort %}
-<div class="row">
-  <div class="col-sm-3">
-    {% if sorted_tags.size > 0 %}
-      <nav id="notes-tag-nav" aria-label="タグ">
-        <ul class="toc-list">
-          <li><a class="toc-link is-active-link" href="#" data-tag="" aria-current="true">すべて<small>{{ site.posts.size }}</small></a></li>
-          {% for tag in sorted_tags %}
-            <li>
-              <a class="toc-link" href="#tag={{ tag[0] | slugify }}" data-tag="{{ tag[0] | slugify }}">{{ tag[0] }}<small>{{ tag[1].size }}</small></a>
-            </li>
-          {% endfor %}
-        </ul>
-      </nav>
-    {% endif %}
-  </div>
-  <div class="col-sm-9">
-    <div class="post">
-      <header class="post-header">
-        <h1 class="post-title">{{ page.title }}</h1>
-      </header>
-      <article>
-        {{ content }}
-      </article>
-    </div>
-  </div>
+<div class="post diary-content notes-index">
+  <header class="post-header">
+    <h1 class="post-title">{{ page.title }}</h1>
+  </header>
+  {% if sorted_tags.size > 0 %}
+    <nav id="notes-tag-nav" aria-label="タグ">
+      <ul>
+        <li><a class="is-active-link" href="#" data-tag="" aria-current="true">すべて<small>{{ site.posts.size }}</small></a></li>
+        {% for tag in sorted_tags %}
+          <li>
+            <a href="#tag={{ tag[0] | slugify }}" data-tag="{{ tag[0] | slugify }}">{{ tag[0] }}<small>{{ tag[1].size }}</small></a>
+          </li>
+        {% endfor %}
+      </ul>
+    </nav>
+  {% endif %}
+  <article>
+    {{ content }}
+  </article>
 </div>
 
 {% if sorted_tags.size > 0 %}

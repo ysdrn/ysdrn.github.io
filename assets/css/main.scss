@@ -56,6 +56,12 @@ a b {
   color: inherit;
 }
 
+// スクロールバーの幅を常にとっておく。長いページ（記事）にだけスクロールバーが出ると、中央寄せの本文の枠が
+// 7.5px 左にずれ、短い一覧から記事を開いたときに位置が変わって見える（2026-11-10）。
+html {
+  scrollbar-gutter: stable;
+}
+
 // 薄い文字色: テーマの #828282 は白地で 3.6:1 しかない（WCAG AA は 4.5:1）。#6b6b6b で 5.3:1。
 // 使われる場所: プロフィール欄のラベル、日記の投稿日・日付ナビ、一覧のメタ行、post-meta。
 :root {
@@ -217,68 +223,45 @@ h1.post-title i[class*="fa-"] {
 }
 // The left TOC is short; tocbot's overflow-y:auto shows a scrollbar for a 1px overflow, so let it overflow
 #toc-sidebar.toc { overflow: visible; }
-// notes の一覧の左のタグナビ（_layouts/notes_index.liquid）。テーマの目次（#toc-sidebar ＋ tocbot.css）と同じ見た目にする
+// notes の一覧（_layouts/notes_index.liquid）。記事ページと同じ 620px の枠に入れ、タグのナビは記事の見出しナビ（.note-toc）と同じ位置・見た目
 #notes-tag-nav {
-  position: sticky;
-  top: 5rem;
-  z-index: 1;
-  .toc-list {
-    list-style: none;
-    margin: 0;
-    padding-left: 0.8rem;
-  }
-  .toc-link {
-    display: block;
-    position: relative;
-    font-size: 0.8rem;
-    line-height: 1.4;
-    padding: 0.14rem 0.25rem 0.14rem 0.4rem;
-    color: var(--global-text-color);
+  position: fixed;
+  right: calc(50% + 330px);
+  top: 50%;
+  transform: translateY(-50%);
+  width: max-content;
+  max-width: 180px;
+  font-size: 13px;
+  line-height: 1.5;
+  ul { list-style: none; margin: 0; padding: 0; }
+  li { margin: 0 0 6px; }
+  a {
     text-decoration: none;
-    &::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 2px;
-      background-color: color-mix(in srgb, var(--global-divider-color) 80%, transparent);
-    }
-    &:hover {
-      color: var(--global-hover-color);
-      &::before { background-color: var(--global-hover-color); }
-    }
-    small {
-      margin-left: 0.4em;
-      font-size: 0.9em;
-      font-weight: 400;
-      color: var(--global-text-color-light);
-    }
-  }
-  .toc-link.is-active-link {
-    color: var(--global-theme-color);
-    font-weight: 600;
-    &::before { background-color: var(--global-theme-color); }
+    color: var(--global-text-color-light);
+    &:hover { color: var(--global-theme-color); }
+    &.is-active-link { color: var(--global-theme-color); font-weight: 600; }
+    small { margin-left: 0.4em; font-size: 0.9em; font-weight: 400; }
   }
 }
 .notes-list > li[hidden] { display: none; }
-// 576px 未満は二段組が縦に積まれるので、タグを一覧の上に横並びにする（テーマの目次はこの幅では消える）
-@media (max-width: 575.98px) {
+// 一覧の題は記事の題（32px）より小さく、本文の枠に収まる大きさに
+.notes-index .post-list li h3 {
+  font-size: 1.375rem;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  font-feature-settings: "palt" 1;
+}
+// 左に余白がとれない幅では、タグを一覧の上に横並びにする（.note-toc と同じ 1040px）
+@media (max-width: 1040px) {
   #notes-tag-nav {
     position: static;
-    padding-bottom: 0.5rem;
+    transform: none;
+    width: auto;
+    max-width: none;
+    padding: 0.5rem 0;
     border-bottom: 1px solid var(--global-divider-color);
-    margin-bottom: 0.5rem;
-    .toc-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.25rem 1rem;
-      padding-left: 0;
-    }
-    .toc-link {
-      padding: 0.14rem 0;
-      &::before { display: none; }
-    }
+    ul { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; }
+    li { margin: 0; }
   }
 }
 .diary-posted {
