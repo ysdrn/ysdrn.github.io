@@ -6,7 +6,7 @@ notes（_posts/、/blog/）の記事ページ。2026-11-10 に diary（_layouts/
 テーマの post.liquid との違い:
 - 本文の幅を diary と同じ 620px（.diary-content）にする（930px だと一行が長くて読みにくい）
 - 上下に前後の記事へのナビ（← 古い記事 / notes / 新しい記事 →）。題は一行に収めて末尾を…で切る（.note-nav）
-- 「Created on April 24, 2022」と年・タグの行をやめ、右寄せで「投稿日：2022年4月24日」だけ（タグ・カテゴリがあればその上）
+- 「Created on April 24, 2022」と年・タグの行をやめ、右寄せで「投稿日：2022年4月24日」だけ。タグ・カテゴリは記事の最後（.note-tags）
 - 記事末尾の関連記事欄はもともと _config.yml で切ってあるので書かない
 - 左に記事内の見出し（h2・h3）のナビ（2026-11-10、本人の希望。diary の曜日ナビに当たる）。JS で #markdown-content の見出しから作り、見出しが 2 つ未満なら出さない。今いる節を色で示す。CSS は main.scss の .note-toc
 toc・citation・related_publications・コメントはテーマと同じ扱いで残す。
@@ -46,14 +46,13 @@ _news もテーマの post レイアウトを使うので、post.liquid は上�
 
   <header class="post-header">
     <h1 class="post-title">{{ page.title }}</h1>
-    {%- comment -%} diary の「diary / 2026week46」に当たる「notes / 2022」の行は出さない（2026-11-10 本人「不要」）。タグ・カテゴリがあるときだけ投稿日の上に出す {%- endcomment -%}
+    {%- comment -%} diary の「diary / 2026week46」に当たる「notes / 2022」の行は出さない（2026-11-10 本人「不要」）。タグ・カテゴリは見出しまわりがごちゃつくので記事の最後に出す（同日、本人） {%- endcomment -%}
     {%- capture note_labels -%}
       {%- for tag in page.tags %}|<a href="{{ tag | slugify | prepend: '/blog/#tag=' | relative_url }}">#{{ tag }}</a>{% endfor -%}
       {%- for category in page.categories %}|<a href="{{ category | slugify | prepend: '/blog/category/' | relative_url }}">{{ category }}</a>{% endfor -%}
     {%- endcapture -%}
     {%- assign note_labels = note_labels | remove_first: '|' | replace: '|', ' &nbsp;&middot;&nbsp; ' -%}
     <p class="diary-posted">
-      {%- if note_labels != '' %}{{ note_labels }}<br>{% endif -%}
       投稿日：{{ page.date | date: '%Y年%-m月%-d日' }}
       {%- if last_date %}<br>更新日：{{ last_date | date: '%Y年%-m月%-d日' }}{% endif -%}
     </p>
@@ -72,6 +71,10 @@ _news もテーマの post レイアウトを使うので、post.liquid は上�
       {{ content }}
     </div>
   </article>
+
+  {% if note_labels != '' %}
+    <p class="note-tags">{{ note_labels }}</p>
+  {% endif %}
 
   {% if page.citation %}
     {% include citation.liquid %}

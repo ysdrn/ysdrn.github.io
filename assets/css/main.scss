@@ -298,6 +298,13 @@ h1.post-title i[class*="fa-"] {
     small { margin-left: 4px; font-size: 0.85em; }
   }
 }
+// notes の記事の最後のタグ（_layouts/note.liquid）。投稿日と同じ薄い色・大きさ
+.note-tags {
+  margin-top: 2.5rem;
+  font-size: 14px;
+  color: var(--global-text-color-light);
+  a { color: inherit; text-decoration: none; &:hover { color: var(--global-theme-color); } }
+}
 // notes の記事の見出しナビ（_layouts/note.liquid）。diary の曜日ナビと同じ文字の大きさ・色で、本文の左に固定する。
 // 見出しは曜日より長いので、右端を本文の枠（620px）の左 20px にそろえ、幅は 180px まで。
 .note-toc {
