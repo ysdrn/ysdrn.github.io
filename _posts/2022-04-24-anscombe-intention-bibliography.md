@@ -31,6 +31,10 @@ categories:
 
 以下で紹介する Teichmann の入門書などは「アンスコムの哲学」の大きな見取り図を与えてくれる良書ではあるが、これらを読むと『インテンション』がとても読みやすくなる、ということは期待できないと思う。この本の難しさはそういうところにはない。
 
+『インテンション』が書かれた当時の知的状況については、
+
+- [クレア・マックール, レイチェル・ワイズマン『オックスフォードの女性哲学者たち：もうひとつの20世紀哲学史』, 木下頌子［訳］, 青土社, 2025.](https://www.hanmoto.com/bd/isbn/9784791777259)（原書：[Clare Mac Cumhaill and Rachael Wiseman, *Metaphysical Animals: How Four Women Brought Philosophy Back to Life*, Chatto & Windus, 2022.](https://www.penguin.co.uk/books/440498/metaphysical-animals-by-wiseman-clare-mac-cumhaill-and-rachael/9781529112184)）
+
 ## より詳しい文献案内
 
 以下は『インテンション』に限らずアンスコムにそれなりに（研究レベルで）付き合ってみるつもりのある人へ向けた案内である。
@@ -42,6 +46,10 @@ categories:
 Müller の論文はアンスコムがどういう人でどういう論文を書いているのかをざっくり教えてくれる。
 
 - [Anselm Müller, “G. E. M. Anscombe (1919–2001)”, in A. P. Martinich and David Sosa (eds.), *A Companion to Analytic Philosophy*, Blackwell, 2001.](https://doi.org/10.1002/9780470998656.ch25)
+
+カルテットと呼ばれる4人組についての研究は進んでいる。
+
+- [Benjamin J. B. Lipscomb, *The Women Are Up to Something: How Elizabeth Anscombe, Philippa Foot, Mary Midgley, and Iris Murdoch Revolutionized Ethics*, Oxford University Press, 2021.](https://global.oup.com/academic/product/the-women-are-up-to-something-9780197541074)
 
 アンスコムの哲学について包括的に扱っている本では、Teichmann の本が非常によくできている。『インテンション』を読むためだけであれば、第二章まで読めばいい。
 
