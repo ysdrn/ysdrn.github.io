@@ -244,12 +244,47 @@ h1.post-title i[class*="fa-"] {
   }
 }
 .notes-list > li[hidden] { display: none; }
-// 一覧の題は記事の題（32px）より小さく、本文の枠に収まる大きさに
-.notes-index .post-list li h3 {
+// 一覧の題は記事の題（32px）より小さく、本文の枠に収まる大きさに（notes・diary の一覧）
+.notes-index .post-list li h3,
+.diary-index .post-list li h3 {
   font-size: 1.375rem;
   line-height: 1.5;
   letter-spacing: 0.04em;
   font-feature-settings: "palt" 1;
+}
+// diary の一覧の年・月の目次（tocbot、_layouts/diary_index.liquid）。notes の見出しナビ・タグナビと同じ位置・見た目にする。
+// テーマ（#toc-sidebar）と tocbot.css の左の縦線（::before）・太字の切り替えは使わない
+#toc-sidebar.diary-toc {
+  position: fixed;
+  right: calc(50% + 330px);
+  left: auto;
+  top: 50%;
+  transform: translateY(-50%);
+  width: max-content;
+  max-width: 180px;
+  max-height: 70vh;
+  overflow-y: auto;
+  font-size: 13px;
+  line-height: 1.5;
+  .toc-list { list-style: none; margin: 0; padding: 0; overflow: visible; }
+  > .toc-list { padding-left: 0; }
+  .toc-list .toc-list { padding-left: 0.8em; margin-top: 6px; }
+  .toc-list-item { margin: 0 0 6px; }
+  .toc-link {
+    display: inline;
+    padding: 0;
+    font-size: inherit;
+    line-height: inherit;
+    color: var(--global-text-color-light);
+    text-decoration: none;
+    &::before { display: none; }
+    &:hover { color: var(--global-theme-color); }
+  }
+  .toc-link.is-active-link { color: var(--global-theme-color); font-weight: 600; }
+}
+// 左に余白がとれない幅では目次を出さない（テーマも 576px 未満では隠している）
+@media (max-width: 1040px) {
+  #toc-sidebar.diary-toc { display: none; }
 }
 // 左に余白がとれない幅では、タグを一覧の上に横並びにする（.note-toc と同じ 1040px）
 @media (max-width: 1040px) {

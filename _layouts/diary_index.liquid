@@ -1,0 +1,19 @@
+---
+layout: default
+---
+{%- comment -%}
+diary の一覧（/diary/、_pages/diary.md）。2026-11-10 に notes の一覧と同じく、週ページと同じ 620px の中央の枠（.diary-content）に入れた
+（テーマの二段組だと右の列が約 700px あり、週ページを開くと本文の幅と左端が変わった）。
+左の年・月の目次はテーマの tocbot のまま（見出しは _includes/diary_list.liquid の高さ 0 の h2・h3）。
+front matter の toc.sidebar を float にして二段組を止め（_layouts/default.liquid）、#toc-sidebar をここに置いて
+CSS（main.scss の #toc-sidebar.diary-toc）で枠の左外、notes の見出しナビ・タグナビと同じ位置・見た目にする。
+{%- endcomment -%}
+<div class="post diary-content diary-index">
+  <header class="post-header">
+    <h1 class="post-title">{{ page.title }}</h1>
+  </header>
+  <nav id="toc-sidebar" class="toc toc-sidebar diary-toc" aria-label="Table of contents" data-toc-collapse="expanded"></nav>
+  <article>
+    {{ content }}
+  </article>
+</div>

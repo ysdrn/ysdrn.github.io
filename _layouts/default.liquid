@@ -43,7 +43,14 @@
       {% if page.toc and page.toc.sidebar %}
         {% assign toc_collapse = page.toc.collapse | default: 'expanded' %}
         {% assign toc_collapse_depth = page.toc.collapse_depth | default: '' %}
-        {% if page.toc.sidebar == 'right' %}
+        {%- comment -%}
+          このサイトの追加（2026-11-10）: toc.sidebar: float は二段組にしない。レイアウトの側が本文の枠の中に
+          <nav id="toc-sidebar"> を置き、CSS で枠の左外に固定する（_layouts/diary_index.liquid、diary の一覧）。
+          tocbot の JS・CSS は toc.sidebar があれば読まれるので、そのまま目次とスクロール追従が効く。
+        {%- endcomment -%}
+        {% if page.toc.sidebar == 'float' %}
+          {{ content }}
+        {% elsif page.toc.sidebar == 'right' %}
           <div class="row">
             <!-- main content area -->
             <div class="col-sm-9">{{ content }}</div>
