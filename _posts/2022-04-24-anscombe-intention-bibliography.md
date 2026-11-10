@@ -47,7 +47,7 @@ Müller の論文はアンスコムがどういう人でどういう論文を書
 
 - Anselm Müller, “G. E. M. Anscombe (1919–2001)”, in A. P. Martinich and David Sosa (eds.), *A Companion to Analytic Philosophy*, Blackwell, 2001.［[DOI](https://doi.org/10.1002/9780470998656.ch25)］
 
-カルテットと呼ばれる4人組についての研究は進んでいる。
+カルテットと呼ばれる4人組についての研究は進んでおり、上で挙げた Mac Cumhaill and Wiseman (2022) の他にも以下が出版された。
 
 - Benjamin J. B. Lipscomb, *The Women Are Up to Something: How Elizabeth Anscombe, Philippa Foot, Mary Midgley, and Iris Murdoch Revolutionized Ethics*, Oxford University Press, 2021.［[出版社](https://global.oup.com/academic/product/the-women-are-up-to-something-9780197541074)］
 
