@@ -1,7 +1,10 @@
 #!/bin/sh
-# commit 前に Amazon カードのキャッシュを埋めて、変更があれば同じ commit に含める。
+# commit 前に Amazon カードのキャッシュと notes のカード画像を作って、変更があれば同じ commit に含める。
 # 有効化: git config core.hooksPath .githooks
 cd "$(git rev-parse --show-toplevel)" || exit 1
 ruby bin/amazon_cache.rb --quiet
 git add _data/amazon_cache.json 2>/dev/null
+# notes の記事の題入りカード画像（cover のある記事。題か写真が変わったものだけ作り直す。Pillow がなければ何もしない）
+python3 bin/note_cards.py --quiet
+git add assets/img/notes/card _data/note_cards.json 2>/dev/null
 exit 0

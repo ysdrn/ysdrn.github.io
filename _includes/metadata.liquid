@@ -1,7 +1,7 @@
 {%- comment -%}
   Local override of al_folio_core 1.0.15 _includes/metadata.liquid. Differences from the theme file:
     - diary weeks: <title> / og:title / twitter:title from the week range or front-matter title
-    - og_title front matter controls the card heading; twitter:card stays "summary"
+    - og_title front matter controls the card heading; twitter:card stays "summary" (notes posts with a cover: summary_large_image + the title card from bin/note_cards.py)
     - meta_description: one stripped description for <meta>, OG, Twitter and JSON-LD (fixes invalid JSON-LD from the folded site.description)
     - og:locale ja_JP; a Person JSON-LD block on the top page; jsonify in the WebSite block (2026-11-10)
   When upgrading the theme: diff against the gem's copy and re-apply these.
@@ -94,24 +94,36 @@ title があればそれ、なければ「[シリーズ名 ]YYYY/MM/DD–DD」�
   <meta property="og:title" content="{% if page.og_title %}{{ page.og_title }}{% elsif diary_heading %}{{ diary_heading }} | diary of Ren Yoshida{% elsif page.title %}{{ title }} | {{ page.title }}{% else %}{{ title }}{% endif %}">
   <meta property="og:url" content="{{ page.url | prepend: site.baseurl | prepend: site.url | remove_first: 'index.html' }}">
   <meta property="og:description" content="{{ meta_description }}">
-  {% if page.og_image or site.og_image %}
+  {%- comment -%} notes の記事で front matter に cover があれば、題入りのカード画像（bin/note_cards.py、1280×670）を大きいカードで出す（2026-11-10、本人の選択）。ほかのページは今までどおり正方形の画像と小さいカード {%- endcomment -%}
+  {% assign og_large = false %}
+  {% if page.cover %}
+    {% assign og_image_source = page.cover | prepend: '/assets/img/notes/card/' %}
+    {% assign og_large = true %}
+  {% else %}
     {% assign og_image_source = page.og_image | default: site.og_image %}
+  {% endif %}
+  {% if og_image_source %}
     {% if og_image_source contains '://' %}
       {% assign og_image_url = og_image_source %}
     {% else %}
       {% assign og_image_url = og_image_source | prepend: site.baseurl | prepend: site.url %}
     {% endif %}
     <meta property="og:image" content="{{ og_image_url }}">
+    {% if og_large %}
+      <meta property="og:image:width" content="1280">
+      <meta property="og:image:height" content="670">
+      <meta property="og:image:alt" content="{{ page.title | escape }}">
+    {% endif %}
   {% endif %}
   {%- comment -%} og:locale は言語_地域 の形（ja → ja_JP） {%- endcomment -%}
   <meta property="og:locale" content="{% if site.lang == 'ja' %}ja_JP{% else %}{{ site.lang }}{% endif %}">
 
   <!-- Twitter card -->
-  {%- comment -%} Local override of the theme include (see og_title above). Keep the small "summary" card: the owner does not want the large image. {%- endcomment -%}
-  <meta name="twitter:card" content="summary">
+  {%- comment -%} Local override of the theme include (see og_title above). Keep the small "summary" card: the owner does not want the large image — except notes posts with a cover (title card, 2026-11-10). {%- endcomment -%}
+  <meta name="twitter:card" content="{% if og_large %}summary_large_image{% else %}summary{% endif %}">
   <meta name="twitter:title" content="{% if page.og_title %}{{ page.og_title }}{% elsif diary_heading %}{{ diary_heading }} | diary of Ren Yoshida{% elsif page.title %}{{ page.title }}{% else %}{{ title }}{% endif %}">
   <meta name="twitter:description" content="{{ meta_description }}">
-  {% if page.og_image or site.og_image %}
+  {% if og_image_source %}
     <meta name="twitter:image" content="{{ og_image_url }}">
   {% endif %}
   {% if site.x_username %}

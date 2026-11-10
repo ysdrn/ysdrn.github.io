@@ -8,6 +8,7 @@ notes（_posts/、/blog/）の記事ページ。2026-11-10 に diary（_layouts/
 - 上下に前後の記事へのナビ（← 古い記事 / notes / 新しい記事 →）。題は一行に収めて末尾を…で切る（.note-nav）
 - 「Created on April 24, 2022」と年・タグの行をやめ、右寄せで「投稿日：2022年4月24日」だけ。タグ・カテゴリは記事の最後（.note-tags）
 - 記事末尾の関連記事欄はもともと _config.yml で切ってあるので書かない
+- front matter の cover（assets/img/notes/ の写真）があれば題の上に出す（.note-cover。2026-11-10）
 - 左に記事内の見出し（h2・h3）のナビ（2026-11-10、本人の希望。diary の曜日ナビに当たる）。JS で #markdown-content の見出しから作り、見出しが 2 つ未満なら出さない。今いる節を色で示す。CSS は main.scss の .note-toc
 toc・citation・related_publications・コメントはテーマと同じ扱いで残す。
 _news もテーマの post レイアウトを使うので、post.liquid は上書きせず別レイアウトにした（_config.yml の defaults で posts に当てる）。
@@ -43,6 +44,11 @@ _news もテーマの post レイアウトを使うので、post.liquid は上�
   <nav class="diary-nav note-nav">
     {{ note_nav }}
   </nav>
+
+  {%- comment -%} front matter の cover（写真）があれば題の上に出す。題が二度続かないよう、題の入っていない元の写真を使う（一覧のサムネと SNS は題入りのカード） {%- endcomment -%}
+  {% if page.cover %}
+    <figure class="note-cover"><img src="{{ page.cover | prepend: '/assets/img/notes/' | relative_url }}" width="1280" height="670" alt=""></figure>
+  {% endif %}
 
   <header class="post-header">
     <h1 class="post-title">{{ page.title }}</h1>
