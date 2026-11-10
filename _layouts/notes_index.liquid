@@ -1,0 +1,70 @@
+---
+layout: default
+---
+{%- comment -%}
+notes の一覧（/blog/、_pages/blog.md）。2026-11-10 に diary の一覧と同じ二段組にした。
+diary は左にテーマの目次（tocbot、年・月）を出すが、notes は左にタグのナビを出す（本人の希望）。
+- ナビは site.tags から作る（名前順、件数つき）。先頭は「すべて」。タグが一つもなければナビは出さない
+- クリックすると一覧をその場で絞り込む（ページ遷移なし）。URL は /blog/#tag=<slug>。記事ページ・一覧のメタ行のタグもここへリンクする
+- 絞り込みは一覧の <li data-tags="slug,slug">（区切りは , 。空白はビルドで詰められる） を隠すだけなので、ページ送りはしない（全件を一枚に出す。diary の一覧と同じ）
+- 見た目はテーマの目次（#toc-sidebar）に合わせる。CSS は main.scss の #notes-tag-nav
+toc.sidebar を使わないのは、テーマの common.js が #toc-sidebar の中身を見出しの目次で上書きするため。
+{%- endcomment -%}
+{% assign sorted_tags = site.tags | sort %}
+<div class="row">
+  <div class="col-sm-3">
+    {% if sorted_tags.size > 0 %}
+      <nav id="notes-tag-nav" aria-label="タグ">
+        <ul class="toc-list">
+          <li><a class="toc-link is-active-link" href="#" data-tag="" aria-current="true">すべて<small>{{ site.posts.size }}</small></a></li>
+          {% for tag in sorted_tags %}
+            <li>
+              <a class="toc-link" href="#tag={{ tag[0] | slugify }}" data-tag="{{ tag[0] | slugify }}">{{ tag[0] }}<small>{{ tag[1].size }}</small></a>
+            </li>
+          {% endfor %}
+        </ul>
+      </nav>
+    {% endif %}
+  </div>
+  <div class="col-sm-9">
+    <div class="post">
+      <header class="post-header">
+        <h1 class="post-title">{{ page.title }}</h1>
+      </header>
+      <article>
+        {{ content }}
+      </article>
+    </div>
+  </div>
+</div>
+
+{% if sorted_tags.size > 0 %}
+  <script>
+    (function () {
+      var nav = document.getElementById("notes-tag-nav");
+      var items = document.querySelectorAll(".notes-list > li");
+      function apply() {
+        var m = location.hash.match(/^#tag=(.+)$/);
+        var tag = m ? decodeURIComponent(m[1]) : "";
+        var links = nav.querySelectorAll("a[data-tag]");
+        var known = false;
+        links.forEach(function (a) {
+          if (a.dataset.tag === tag) known = true;
+        });
+        if (!known) tag = "";
+        links.forEach(function (a) {
+          var on = a.dataset.tag === tag;
+          a.classList.toggle("is-active-link", on);
+          if (on) a.setAttribute("aria-current", "true");
+          else a.removeAttribute("aria-current");
+        });
+        items.forEach(function (li) {
+          var tags = (li.dataset.tags || "").split(",");
+          li.hidden = tag !== "" && tags.indexOf(tag) === -1;
+        });
+      }
+      window.addEventListener("hashchange", apply);
+      apply();
+    })();
+  </script>
+{% endif %}

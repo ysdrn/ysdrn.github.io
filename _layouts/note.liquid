@@ -47,7 +47,7 @@ _news もテーマの post レイアウトを使うので、post.liquid は上�
     <h1 class="post-title">{{ page.title }}</h1>
     {%- comment -%} diary の「diary / 2026week46」に当たる「notes / 2022」の行は出さない（2026-11-10 本人「不要」）。タグ・カテゴリがあるときだけ投稿日の上に出す {%- endcomment -%}
     {%- capture note_labels -%}
-      {%- for tag in page.tags %}|<a href="{{ tag | slugify | prepend: '/blog/tag/' | relative_url }}">#{{ tag }}</a>{% endfor -%}
+      {%- for tag in page.tags %}|<a href="{{ tag | slugify | prepend: '/blog/#tag=' | relative_url }}">#{{ tag }}</a>{% endfor -%}
       {%- for category in page.categories %}|<a href="{{ category | slugify | prepend: '/blog/category/' | relative_url }}">{{ category }}</a>{% endfor -%}
     {%- endcapture -%}
     {%- assign note_labels = note_labels | remove_first: '|' | replace: '|', ' &nbsp;&middot;&nbsp; ' -%}

@@ -180,6 +180,70 @@ h1.post-title i[class*="fa-"] {
 }
 // The left TOC is short; tocbot's overflow-y:auto shows a scrollbar for a 1px overflow, so let it overflow
 #toc-sidebar.toc { overflow: visible; }
+// notes の一覧の左のタグナビ（_layouts/notes_index.liquid）。テーマの目次（#toc-sidebar ＋ tocbot.css）と同じ見た目にする
+#notes-tag-nav {
+  position: sticky;
+  top: 5rem;
+  z-index: 1;
+  .toc-list {
+    list-style: none;
+    margin: 0;
+    padding-left: 0.8rem;
+  }
+  .toc-link {
+    display: block;
+    position: relative;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    padding: 0.14rem 0.25rem 0.14rem 0.4rem;
+    color: var(--global-text-color);
+    text-decoration: none;
+    &::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background-color: color-mix(in srgb, var(--global-divider-color) 80%, transparent);
+    }
+    &:hover {
+      color: var(--global-hover-color);
+      &::before { background-color: var(--global-hover-color); }
+    }
+    small {
+      margin-left: 0.4em;
+      font-size: 0.9em;
+      font-weight: 400;
+      color: var(--global-text-color-light);
+    }
+  }
+  .toc-link.is-active-link {
+    color: var(--global-theme-color);
+    font-weight: 600;
+    &::before { background-color: var(--global-theme-color); }
+  }
+}
+.notes-list > li[hidden] { display: none; }
+// 576px 未満は二段組が縦に積まれるので、タグを一覧の上に横並びにする（テーマの目次はこの幅では消える）
+@media (max-width: 575.98px) {
+  #notes-tag-nav {
+    position: static;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--global-divider-color);
+    margin-bottom: 0.5rem;
+    .toc-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem 1rem;
+      padding-left: 0;
+    }
+    .toc-link {
+      padding: 0.14rem 0;
+      &::before { display: none; }
+    }
+  }
+}
 .diary-posted {
   font-size: 14px;
   line-height: 1.6;

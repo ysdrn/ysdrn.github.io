@@ -1,31 +1,16 @@
 ---
-layout: page
+layout: notes_index
 permalink: /blog/
 title: notes
 og_title: notes of Ren Yoshida
 nav: true
 nav_order: 4
-pagination:
-  enabled: true
-  collection: posts
-  permalink: /page/:num/
-  per_page: 5
-  sort_field: date
-  sort_reverse: true
-  trail:
-    before: 1
-    after: 3
 ---
 
-  <ul class="post-list">
+  <ul class="post-list notes-list">
 
-    {% if page.pagination.enabled %}
-      {% assign postlist = paginator.posts %}
-    {% else %}
-      {% assign postlist = site.posts %}
-    {% endif %}
-
-    {% for post in postlist %}
+    {%- comment -%} ページ送りはしない（全件を一枚に。左のタグナビの絞り込みは一覧の中だけで効くので）。レイアウトは _layouts/notes_index.liquid {%- endcomment -%}
+    {% for post in site.posts %}
 
     {%- comment -%}
     2026-11-10 diary の一覧（_includes/diary_list.liquid）と同じ形にした: 題 / description（なければ本文の冒頭 90 字） / メタ行「2022年4月24日」。
@@ -37,7 +22,7 @@ pagination:
       {% assign blurb = post.content | strip_html | strip_newlines | strip | truncate: 90 %}
     {% endif %}
 
-    <li>
+    <li data-tags="{% for tag in post.tags %}{{ tag | slugify }}{% unless forloop.last %},{% endunless %}{% endfor %}">
 
 {% if post.thumbnail %}
 <div class="row">
@@ -55,7 +40,7 @@ pagination:
       {% if blurb != "" %}<p>{{ blurb }}</p>{% endif %}
       <p class="post-meta">
         {{- post.date | date: "%Y年%-m月%-d日" -}}
-        {%- for tag in post.tags %} &nbsp; &middot; &nbsp; <a href="{{ tag | slugify | prepend: '/blog/tag/' | relative_url }}">#{{ tag }}</a>{% endfor -%}
+        {%- for tag in post.tags %} &nbsp; &middot; &nbsp; <a href="{{ tag | slugify | prepend: '/blog/#tag=' | relative_url }}">#{{ tag }}</a>{% endfor -%}
         {%- for category in post.categories %} &nbsp; &middot; &nbsp; <a href="{{ category | slugify | prepend: '/blog/category/' | relative_url }}">{{ category }}</a>{% endfor -%}
       </p>
 
@@ -72,6 +57,3 @@ pagination:
 
   </ul>
 
-{% if page.pagination.enabled %}
-{% include pagination.liquid %}
-{% endif %}
