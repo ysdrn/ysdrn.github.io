@@ -326,27 +326,27 @@ h1.post-title i[class*="fa-"] {
     small { margin-left: 4px; font-size: 0.85em; }
   }
 }
-// notes の記事の写真（front matter の cover、_layouts/note.liquid）。本文と同じ幅（上のナビの線と揃える）で題の上に出す
-.note-cover {
+// diary の週の写真（front matter の cover、_layouts/diary.liquid）。本文と同じ幅（上のナビの線と揃える）で題の上に出す
+.week-cover {
   margin: 1.5rem 0 0;
   img { display: block; width: 100%; height: auto; border-radius: 4px; }
   + .post-header { margin-top: 1.5rem; }
 }
-// notes 一覧のサムネ（題入りのカード画像、_pages/blog.md）。題の右に置き、紹介文と日付はその下に全幅
-.notes-item {
+// diary 一覧のサムネ（題入りのカード画像、_includes/diary_list.liquid）。題の右に置き、紹介文と日付はその下に全幅
+.diary-item {
   display: flex;
   gap: 1.25rem;
   align-items: flex-start;
   margin-bottom: 0.75rem;
   h3 { flex: 1; min-width: 0; margin-bottom: 0; }
 }
-.notes-item-cover {
+.diary-item-cover {
   flex: 0 0 168px;
   margin-top: 0.3rem;
   img { display: block; width: 100%; height: auto; border-radius: 4px; }
 }
 @media (max-width: 480px) {
-  .notes-item-cover { flex-basis: 112px; }
+  .diary-item-cover { flex-basis: 112px; }
 }
 // notes の記事の最後のタグ（_layouts/note.liquid）。投稿日と同じ薄い色・大きさ
 .note-tags {

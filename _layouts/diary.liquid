@@ -49,6 +49,11 @@ layout: default
     {% endif %}
   </nav>
 
+  {%- comment -%} front matter の cover（assets/img/diary/ の写真）があれば題の上に出す。題が二度続かないよう、題の入っていない元の写真（一覧のサムネと SNS は題入りのカード、bin/diary_cards.py）。2026-11-10 {%- endcomment -%}
+  {% if page.cover %}
+    <figure class="week-cover"><img src="{{ page.cover | prepend: '/assets/img/diary/' | relative_url }}" width="1280" height="670" alt=""></figure>
+  {% endif %}
+
   <header class="post-header">
     <h1 class="post-title">{% if page_title %}{{ page_title }}{% else %}{{ week_range }}{% endif %}</h1>
     {% if page_title %}<p class="diary-subtitle">{{ week_range }}</p>{% endif %}

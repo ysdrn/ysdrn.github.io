@@ -13,7 +13,7 @@ nav_order: 4
     {% for post in site.posts %}
 
     {%- comment -%}
-    2026-11-10 diary の一覧（_includes/diary_list.liquid）と同じ形にした: 題 / description（なければ本文の冒頭 90 字） / メタ行「2022年4月24日」。front matter に cover（写真）がある記事は右にサムネ（題入りのカード画像）。
+    2026-11-10 diary の一覧（_includes/diary_list.liquid）と同じ形にした: 題 / description（なければ本文の冒頭 90 字） / メタ行「2022年4月24日」。
     テーマの「1 min read · April 24, 2022」と年だけの行は出さない。タグ・カテゴリがあればメタ行に続けて出す。
     {%- endcomment -%}
     {% if post.description and post.description != "" %}
@@ -24,8 +24,6 @@ nav_order: 4
 
     <li data-tags="{% for tag in post.tags %}{{ tag | slugify }}{% unless forloop.last %},{% endunless %}{% endfor %}">
 
-      {%- comment -%} 題とサムネを横に並べ、紹介文と日付の行はその下に全幅で出す（スマホでも文字の列が細くならないように） {%- endcomment -%}
-      <div class="notes-item">
         <h3>
         {% if post.redirect == blank %}
           <a class="post-title" href="{{ post.url | relative_url }}">{{ post.title }}</a>
@@ -35,11 +33,6 @@ nav_order: 4
           <a class="post-title" href="{{ post.redirect | relative_url }}">{{ post.title }}</a>
         {% endif %}
       </h3>
-      {%- comment -%} サムネは題を重ねたカード画像（bin/note_cards.py が作る）。リンクは題と同じ先なので読み上げ・Tab からは外す {%- endcomment -%}
-      {% if post.cover %}
-        <a class="notes-item-cover" href="{{ post.url | relative_url }}" tabindex="-1" aria-hidden="true"><img src="{{ post.cover | prepend: '/assets/img/notes/card/' | relative_url }}" width="1280" height="670" alt="" loading="lazy"></a>
-      {% endif %}
-      </div>
       {% if blurb != "" %}<p>{{ blurb }}</p>{% endif %}
       <p class="post-meta">
         {{- post.date | date: "%Y年%-m月%-d日" -}}

@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
-"""notes の記事の写真（front matter の cover）に題を重ねたカード画像を作る。
+"""diary の週の写真（front matter の cover）に題を重ねたカード画像を作る。
 
-- 入力: _posts/*.md の front matter `cover: <ファイル名>`（写真は assets/img/notes/<ファイル名>）と `title:`
-- 出力: assets/img/notes/card/<ファイル名>（1280×670、JPEG）。notes 一覧のサムネと SNS のカード（og:image）に使う
-- 記事ページの題の上には題の入っていない元の写真を出す（題が二度続かないように）
-- 題か写真が変わった記事だけ作り直す（_data/note_cards.json に題と写真のハッシュを控える）
+- 入力: _diary/*.md の front matter `cover: <ファイル名>`（写真は assets/img/diary/<ファイル名>）と `title:`。
+  title のない週は期間「2026/11/09–15」を題にする（_layouts/diary.liquid と同じ書き方）
+- 出力: assets/img/diary/card/<ファイル名>（1280×670、JPEG）。diary 一覧のサムネと SNS のカード（og:image）に使う
+- 週ページの題の上には題の入っていない元の写真を出す（題が二度続かないように）
+- 題か写真が変わった週だけ作り直す（_data/diary_cards.json に題と写真のハッシュを控える）
 
 Mac で実行する（Pillow とヒラギノ角ゴシックが要る。CI では作らない）:
-    python3 bin/note_cards.py            # 変わった記事だけ
-    python3 bin/note_cards.py --force    # 全部作り直す
+    python3 bin/diary_cards.py            # 変わった週だけ
+    python3 bin/diary_cards.py --force    # 全部作り直す
 pre-commit hook（.githooks/pre-commit）が --quiet で自動実行する。Pillow がなければ何もしない。
 
-2026-11-10 作成。見た目の数値は下の定数。
+2026-11-10 作成（最初は notes 用に作り、同日 diary 用に移した）。見た目の数値は下の定数。
 """
+import datetime
 import hashlib
 import json
 import re
@@ -20,10 +22,10 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-POSTS = ROOT / "_posts"
-SRC_DIR = ROOT / "assets" / "img" / "notes"
+DIARY = ROOT / "_diary"
+SRC_DIR = ROOT / "assets" / "img" / "diary"
 OUT_DIR = SRC_DIR / "card"
-MANIFEST = ROOT / "_data" / "note_cards.json"
+MANIFEST = ROOT / "_data" / "diary_cards.json"
 
 W, H = 1280, 670  # note の見出し画像と同じ比率（1.91:1、OGP の推奨）
 FONT = "/System/Library/Fonts/ヒラギノ角ゴシック W6.ttc"
@@ -51,13 +53,21 @@ def front_matter(path):
         return {}
     fm = {}
     for line in m.group(1).splitlines():
-        mm = re.match(r"^(title|cover):\s*(.*)$", line)
+        mm = re.match(r"^(title|cover|date):\s*(.*)$", line)
         if mm:
             v = mm.group(2).strip()
             if len(v) >= 2 and v[0] == v[-1] and v[0] in "\"'":
                 v = v[1:-1]
             fm[mm.group(1)] = v
     return fm
+
+
+def week_range(date_str):
+    """2026-11-09 → 2026/11/09–15、月をまたぐ週は 2026/11/30–12/06（_layouts/diary.liquid と同じ）"""
+    start = datetime.date.fromisoformat(date_str.strip()[:10])
+    end = start + datetime.timedelta(days=6)
+    tail = f"{end:%d}" if end.month == start.month else f"{end:%m/%d}"
+    return f"{start:%Y/%m/%d}–{tail}"
 
 
 def char_advance(font, ch):
@@ -158,23 +168,24 @@ def main():
         import PIL  # noqa: F401
     except ImportError:
         if not quiet:
-            print("note_cards: Pillow がないので作らない（pip install pillow）")
+            print("diary_cards: Pillow がないので作らない（pip install pillow）")
         return 0
     if not Path(FONT).exists():
         if not quiet:
-            print(f"note_cards: フォントがない: {FONT}")
+            print(f"diary_cards: フォントがない: {FONT}")
         return 0
 
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8")) if MANIFEST.exists() else {}
     seen, made = set(), []
-    for post in sorted(POSTS.glob("*.md")):
+    for post in sorted(DIARY.glob("*.md")):
         fm = front_matter(post)
-        cover, title = fm.get("cover"), fm.get("title", "")
+        cover = fm.get("cover")
         if not cover:
             continue
+        title = fm.get("title") or week_range(fm.get("date") or post.name[:10])
         src = SRC_DIR / cover
         if not src.exists():
-            print(f"note_cards: 写真がない: {src.relative_to(ROOT)}（{post.name}）")
+            print(f"diary_cards: 写真がない: {src.relative_to(ROOT)}（{post.name}）")
             continue
         seen.add(cover)
         key = hashlib.md5(f"{VERSION}\n{title}\n".encode() + src.read_bytes()).hexdigest()
@@ -189,7 +200,7 @@ def main():
         manifest.pop(gone)
     MANIFEST.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     if made or not quiet:
-        print(f"note_cards: {len(made)} 枚作成" + (f"（{', '.join(made)}）" if made else ""))
+        print(f"diary_cards: {len(made)} 枚作成" + (f"（{', '.join(made)}）" if made else ""))
     return 0
 
 
