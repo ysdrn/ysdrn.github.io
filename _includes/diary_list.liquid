@@ -44,11 +44,8 @@ title がある週は期間をメタ行に出す。
     {% assign blurb = entry.content | strip_html | replace: "<!-- day -->", " " | strip_newlines | strip | truncate: 90 %}
   {% endif %}
   <li>
-    {%- comment -%} cover のある週は題の右に題入りのカード画像（bin/diary_cards.py）。紹介文と日付は下に全幅。リンクは題と同じ先なので読み上げ・Tab からは外す {%- endcomment -%}
-    <div class="diary-item">
-      <h3 data-toc-skip><a class="post-title" href="{{ entry.url | relative_url }}">{% if entry_title %}{{ entry_title }}{% else %}{{ week_range }}{% endif %}</a></h3>
-      {% if entry.cover %}<a class="diary-item-cover" href="{{ entry.url | relative_url }}" tabindex="-1" aria-hidden="true"><img src="{{ entry.cover | prepend: '/assets/img/diary/card/' | relative_url }}" width="1280" height="670" alt="" loading="lazy"></a>{% endif %}
-    </div>
+    {%- comment -%} 一覧にはサムネを出さない（2026-11-10、本人。写真は週ページの題の上と SNS のカードだけ） {%- endcomment -%}
+    <h3 data-toc-skip><a class="post-title" href="{{ entry.url | relative_url }}">{% if entry_title %}{{ entry_title }}{% else %}{{ week_range }}{% endif %}</a></h3>
     {% if blurb != "" %}<p>{{ blurb }}</p>{% endif %}
     <p class="post-meta">{{ week_id }} &nbsp; &middot; &nbsp; {% if entry_title %}{{ week_range }}{% else %}{{ entry.date | date: "%Y年%-m月%-d日" }}{% endif %}</p>
   </li>

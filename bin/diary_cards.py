@@ -3,7 +3,7 @@
 
 - 入力: _diary/*.md の front matter `cover: <ファイル名>`（写真は assets/img/diary/<ファイル名>）と `title:`。
   title のない週は期間「2026/11/09–15」を題にする（_layouts/diary.liquid と同じ書き方）
-- 出力: assets/img/diary/card/<ファイル名>（1280×670、JPEG）。diary 一覧のサムネと SNS のカード（og:image）に使う
+- 出力: assets/img/diary/card/<ファイル名>（1280×670、JPEG）。SNS のカード（og:image）に使う（一覧のサムネには出さない）
 - 週ページの題の上には題の入っていない元の写真を出す（題が二度続かないように）
 - 題か写真が変わった週だけ作り直す（_data/diary_cards.json に題と写真のハッシュを控える）
 
