@@ -299,6 +299,8 @@ h1.post-title i[class*="fa-"] {
   flex-direction: column;
   gap: 4px;
   font-size: 13px;
+  // Inter の数字は字ごとに幅が違う（1 が細い）ので、等幅数字にして曜日の左端を揃える（2026-11-10）
+  font-variant-numeric: tabular-nums;
   a {
     text-decoration: none;
     color: var(--global-text-color-light);
