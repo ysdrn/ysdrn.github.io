@@ -1,8 +1,13 @@
+{%- comment -%}
+テーマ（al_folio_core 1.0.15）の footer.liquid の写し。差分: 2026-11-10 にコピーライトの後ろへ /sitemap/ へのリンクを足した
+（Amazon アソシエイトの表記をサイトマップに置くので、どのページからも一回で届くようにする）。
+{%- endcomment -%}
 {% capture footer_contents %}
   &copy; {{ site.time | date: '%Y' }}
   {{ site.first_name }}
   {{ site.middle_name }}
   {{ site.last_name }}.
+  &nbsp;&middot;&nbsp; <a href="{{ '/sitemap/' | relative_url }}">sitemap</a>
   {% if site.impressum_path %}
     <a href="{{ site.url }}{{ site.baseurl }}{{ site.impressum_path }}">Impressum</a>.
   {% endif %}

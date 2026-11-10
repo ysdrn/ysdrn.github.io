@@ -269,6 +269,43 @@ h1.post-title i[class*="fa-"] {
     small { margin-left: 4px; font-size: 0.85em; }
   }
 }
+// notes の記事の見出しナビ（_layouts/note.liquid）。diary の曜日ナビと同じ文字の大きさ・色で、本文の左に固定する。
+// 見出しは曜日より長いので、右端を本文の枠（620px）の左 20px にそろえ、幅は 180px まで。
+.note-toc {
+  position: fixed;
+  right: calc(50% + 330px);
+  top: 50%;
+  transform: translateY(-50%);
+  width: max-content;
+  max-width: 180px;
+  max-height: 70vh;
+  overflow-y: auto;
+  font-size: 13px;
+  line-height: 1.5;
+  ul { list-style: none; margin: 0; padding: 0; }
+  li { margin: 0 0 6px; }
+  li.note-toc-sub { padding-left: 0.8em; }
+  a {
+    text-decoration: none;
+    color: var(--global-text-color-light);
+    &:hover { color: var(--global-theme-color); }
+    &.is-current { color: var(--global-theme-color); font-weight: 600; }
+  }
+}
+// 左に 180px の余白がとれない幅では、見出しの下・本文の上に普通の目次として置く
+@media (max-width: 1040px) {
+  .note-toc {
+    position: static;
+    transform: none;
+    width: auto;
+    max-width: none;
+    max-height: none;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--global-divider-color);
+    margin-bottom: 1.5rem;
+    li:last-child { margin-bottom: 0; }
+  }
+}
 // 760px 未満では左の固定配置（calc(50% - 370px)）が画面左端に張り付くので、上の横並びに切り替える
 @media (max-width: 760px) {
   .diary-days-nav {
@@ -281,6 +318,19 @@ h1.post-title i[class*="fa-"] {
     margin-bottom: 1.5rem;
     a small { display: block; margin-left: 0; text-align: center; }
   }
+}
+
+// サイトマップ（_pages/sitemap.md）
+.sitemap-list {
+  ul { margin-top: 0.25rem; margin-bottom: 0; }
+  li { margin-bottom: 0.25rem; }
+  .sitemap-date { margin-left: 0.5em; font-size: 0.85em; color: var(--global-text-color-light); white-space: nowrap; }
+}
+.sitemap-associate {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--global-divider-color);
+  font-size: 0.9rem;
 }
 
 // Profile list on the about page (Location / Email / Twitter / Works)

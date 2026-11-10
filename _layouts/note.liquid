@@ -8,6 +8,7 @@ notes（_posts/、/blog/）の記事ページ。2026-11-10 に diary（_layouts/
 - 上下に前後の記事へのナビ（← 古い記事 / notes / 新しい記事 →）。題は一行に収めて末尾を…で切る（.note-nav）
 - 「Created on April 24, 2022」と年・タグの行をやめ、右寄せで「投稿日：2022年4月24日」だけ（タグ・カテゴリがあればその上）
 - 記事末尾の関連記事欄はもともと _config.yml で切ってあるので書かない
+- 左に記事内の見出し（h2・h3）のナビ（2026-11-10、本人の希望。diary の曜日ナビに当たる）。JS で #markdown-content の見出しから作り、見出しが 2 つ未満なら出さない。今いる節を色で示す。CSS は main.scss の .note-toc
 toc・citation・related_publications・コメントはテーマと同じ扱いで残す。
 _news もテーマの post レイアウトを使うので、post.liquid は上書きせず別レイアウトにした（_config.yml の defaults で posts に当てる）。
 {%- endcomment -%}
@@ -58,6 +59,8 @@ _news もテーマの post レイアウトを使うので、post.liquid は上�
     </p>
   </header>
 
+  <nav class="note-toc" id="note-toc" aria-label="目次" hidden></nav>
+
   <article class="post-content">
     {% if page.toc and page.toc.beginning %}
       <div id="table-of-contents">
@@ -89,3 +92,42 @@ _news もテーマの post レイアウトを使うので、post.liquid は上�
     {{ note_nav }}
   </nav>
 </div>
+
+<script>
+  (function () {
+    var nav = document.getElementById("note-toc");
+    var heads = Array.prototype.slice.call(document.querySelectorAll("#markdown-content h2[id], #markdown-content h3[id]"));
+    if (!nav || heads.length < 2) return;
+    var list = document.createElement("ul");
+    var links = heads.map(function (h) {
+      var li = document.createElement("li");
+      if (h.tagName === "H3") li.className = "note-toc-sub";
+      var a = document.createElement("a");
+      a.href = "#" + encodeURIComponent(h.id);
+      a.textContent = h.textContent.trim();
+      li.appendChild(a);
+      list.appendChild(li);
+      return a;
+    });
+    nav.appendChild(list);
+    nav.hidden = false;
+    var ticking = false;
+    function mark() {
+      ticking = false;
+      var current = -1;
+      for (var i = 0; i < heads.length; i++) {
+        if (heads[i].getBoundingClientRect().top <= 90) current = i;
+      }
+      links.forEach(function (a, i) {
+        var on = i === current;
+        a.classList.toggle("is-current", on);
+        if (on) a.setAttribute("aria-current", "location");
+        else a.removeAttribute("aria-current");
+      });
+    }
+    window.addEventListener("scroll", function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(mark); }
+    }, { passive: true });
+    mark();
+  })();
+</script>
