@@ -42,6 +42,8 @@ jobs:
           bundle exec jekyll build
       - name: Purge unused CSS
         run: npx purgecss -c purgecss.config.js # purgecss は devDependencies（npm ci で入る）
+      - name: Re-hash CSS URLs after purge
+        run: ruby bin/bust_purged_css.rb _site # ?v= を削ったあとの CSS の中身から付け直す（記事しだいで中身が変わるため）
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
