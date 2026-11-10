@@ -2,7 +2,7 @@
 """diary の週の写真（front matter の cover）に題を重ねたカード画像を作る。
 
 - 入力: _diary/*.md の front matter `cover: <ファイル名>`（写真は assets/img/diary/<ファイル名>）と `title:`。
-  title のない週は期間「2026/11/09–15」を題にする（_layouts/diary.liquid と同じ書き方）
+  title のない週は期間「2026/11/09–15」を題にする（_layouts/diary.liquid と同じ書き方）。title のある週は題の下に期間を小さく出す
 - 出力: assets/img/diary/card/<ファイル名>（1280×670、JPEG）。SNS のカード（og:image）に使う（一覧のサムネには出さない）
 - 週ページの題の上には題の入っていない元の写真を出す（題が二度続かないように）
 - 題か写真が変わった週だけ作り直す（_data/diary_cards.json に題と写真のハッシュを控える）
@@ -36,7 +36,12 @@ TRACKING = 0.04  # 字間（em）。サイトの記事の題と同じ
 MARGIN_X = 72
 MARGIN_BOTTOM = 64
 MAX_LINES = 3
-VERSION = 2  # 見た目を変えたら上げる（全記事を作り直す）
+# 題のある週は題の下に期間（2025/03/17–23）を小さく出す（2026-11-10、本人）
+SUB_FONT = "/System/Library/Fonts/ヒラギノ角ゴシック W4.ttc"
+SUB_FONT_SIZE = 32
+SUB_GAP = 14  # 題の最後の行と期間の間（px）
+SUB_ALPHA = 225  # 期間の文字の濃さ（255 で真っ白）
+VERSION = 3  # 見た目を変えたら上げる（全記事を作り直す）
 
 # 行頭に来てはいけない字・行末に来てはいけない字（簡単な禁則）
 NO_START = set("、。，．・：；？！」』）〕］｝〉》ー…‥ぁぃぅぇぉっゃゅょゎァィゥェォッャュョヮヵヶ")
@@ -115,7 +120,7 @@ def cover_crop(img):
     return img.crop((left, top, left + W, top + H))
 
 
-def render(src, title, out):
+def render(src, title, out, subtitle=None):
     from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
     base = cover_crop(Image.open(src).convert("RGB"))
@@ -139,7 +144,9 @@ def render(src, title, out):
         size -= 4
 
     line_h = round(size * LINE_HEIGHT)
-    y0 = H - MARGIN_BOTTOM - line_h * len(lines) + round((line_h - size) / 2)
+    sub_font = ImageFont.truetype(SUB_FONT, SUB_FONT_SIZE) if subtitle else None
+    sub_h = (SUB_GAP + SUB_FONT_SIZE) if subtitle else 0
+    y0 = H - MARGIN_BOTTOM - sub_h - line_h * len(lines) + round((line_h - size) / 2)
 
     # 文字の影（ぼかした黒）を先に描いてから白い文字を重ねる
     shadow = Image.new("L", (W, H), 0)
@@ -153,6 +160,13 @@ def render(src, title, out):
             sd.text((x, y + 2), ch, font=font, fill=255, features=["palt"])
             td.text((x, y), ch, font=font, fill=255, features=["palt"])
             x += char_advance(font, ch)
+    if subtitle:
+        x = MARGIN_X
+        y = y0 + (len(lines) - 1) * line_h + size + SUB_GAP + round((line_h - size) / 2)
+        for ch in subtitle:
+            sd.text((x, y + 2), ch, font=sub_font, fill=255, features=["palt"])
+            td.text((x, y), ch, font=sub_font, fill=SUB_ALPHA, features=["palt"])
+            x += char_advance(sub_font, ch)
     shadow = shadow.filter(ImageFilter.GaussianBlur(6)).point(lambda v: int(v * 0.55))
     base = Image.composite(Image.new("RGB", (W, H), (0, 0, 0)), base, shadow)
     base = Image.composite(Image.new("RGB", (W, H), (255, 255, 255)), base, text)
@@ -182,18 +196,20 @@ def main():
         cover = fm.get("cover")
         if not cover:
             continue
-        title = fm.get("title") or week_range(fm.get("date") or post.name[:10])
+        span = week_range(fm.get("date") or post.name[:10])
+        title = fm.get("title") or span
+        subtitle = span if fm.get("title") else None  # 題のない週は期間が題なので二行目は付けない
         src = SRC_DIR / cover
         if not src.exists():
             print(f"diary_cards: 写真がない: {src.relative_to(ROOT)}（{post.name}）")
             continue
         seen.add(cover)
-        key = hashlib.md5(f"{VERSION}\n{title}\n".encode() + src.read_bytes()).hexdigest()
+        key = hashlib.md5(f"{VERSION}\n{title}\n{subtitle}\n".encode() + src.read_bytes()).hexdigest()
         out = OUT_DIR / cover
         if not force and manifest.get(cover, {}).get("key") == key and out.exists():
             continue
-        render(src, title, out)
-        manifest[cover] = {"title": title, "key": key}
+        render(src, title, out, subtitle)
+        manifest[cover] = {"title": title, "subtitle": subtitle, "key": key}
         made.append(cover)
 
     for gone in sorted(set(manifest) - seen):
