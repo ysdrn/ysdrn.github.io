@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: note
 title: アンスコム『インテンション』を読むための文献案内
 date: 2022-04-24
 description:

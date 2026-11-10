@@ -221,6 +221,10 @@ defaults:
     values:
       sitemap: false
   - scope:
+      type: "posts"
+    values:
+      layout: note # 2026-11-10 notes の記事は diary と同じ形（_layouts/note.liquid）
+  - scope:
       type: "diary"
     values:
       layout: diary
