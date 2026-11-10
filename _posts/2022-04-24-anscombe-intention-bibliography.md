@@ -13,7 +13,7 @@ categories:
 
 『インテンション』の日本語は二種類あるが、新しい方の柏端訳は完成版と言っていい。正確な訳文で、理解のための註も多数ついている。
 
-- G・E・M・アンスコム『インテンション』, 柏端達也［訳］, 岩波書店, 2022.［[出版社](https://www.iwanami.co.jp/book/b600990.html)］
+- G・E・M・アンスコム『インテンション』, 柏端達也［訳］, 岩波書店, 2022.［[出版社](https://www.iwanami.co.jp/book/b600990.html)］［[Amazon](https://link.amazon/B0bnp1WOV){:rel="noopener nofollow sponsored"}］
 
 読む前に『インテンション』全体の構成について見取り図が欲しければ、スタウトランドの解説を読むのがよい。ただし、トンプソンの『生と行為』の影響を強く受けており、標準的な読解とは言えない部分もある点には注意が必要である。同論文集には英語版の索引も付いており、入手しておくと原書を読むときに便利。
 
@@ -31,9 +31,9 @@ categories:
 
 以下で紹介する Teichmann の入門書などは「アンスコムの哲学」の大きな見取り図を与えてくれる良書ではあるが、これらを読むと『インテンション』がとても読みやすくなる、ということは期待できないと思う。この本の難しさはそういうところにはない。
 
-『インテンション』が書かれた当時の知的状況については、
+『インテンション』が書かれた当時の知的状況を知るには、以下が読み物として面白い。
 
-- クレア・マックール, レイチェル・ワイズマン『オックスフォードの女性哲学者たち：もうひとつの20世紀哲学史』, 木下頌子［訳］, 青土社, 2025.［[版元ドットコム](https://www.hanmoto.com/bd/isbn/9784791777259)］（原書：Clare Mac Cumhaill and Rachael Wiseman, *Metaphysical Animals: How Four Women Brought Philosophy Back to Life*, Chatto & Windus, 2022.［[出版社](https://www.penguin.co.uk/books/440498/metaphysical-animals-by-wiseman-clare-mac-cumhaill-and-rachael/9781529112184)］）
+- クレア・マックール, レイチェル・ワイズマン『オックスフォードの女性哲学者たち：もうひとつの20世紀哲学史』, 木下頌子［訳］, 青土社, 2025.［[Amazon](https://link.amazon/B0dVlCiLu){:rel="noopener nofollow sponsored"}］（原書：Clare Mac Cumhaill and Rachael Wiseman, *Metaphysical Animals: How Four Women Brought Philosophy Back to Life*, Chatto & Windus, 2022.［[出版社](https://www.penguin.co.uk/books/440498/metaphysical-animals-by-wiseman-clare-mac-cumhaill-and-rachael/9781529112184)］）
 
 ## より詳しい文献案内
 
