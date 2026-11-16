@@ -166,8 +166,8 @@
       number and pages, YYYY年M月 for the date, no English "In".
       One shape per kind (2026-11-16): a journal piece (article, incl. reviews,
       reports and translations) is 『誌名』巻(号), N–M頁 with no publisher (the
-      publisher stays in the BibTeX); a chapter (incollection) is 『書名』, 出版社,
-      N–M頁; a book is 出版社. Use these fields, not free-text howpublished.
+      publisher stays in the BibTeX); a chapter (incollection) is 著者『書名』, 出版社,
+      N–M頁 (著者 = bookauthor, the book's author when it isn't ours); a book is 出版社. Use these fields, not free-text howpublished.
     {%- endcomment -%}
     {% assign proceedings = 'inproceedings' | split: ',' %}
     {% assign collections = 'incollection,inbook' | split: ',' %}
@@ -181,7 +181,7 @@
       {% capture venue %}{{ entry.booktitle }}{% if entry.address %}（{{ entry.address }}）{% endif %}{% endcapture %}
       {% assign parts = parts | push: venue %}
     {% elsif collections contains entry.type %}
-      {% capture venue %}『{{ entry.booktitle }}』{% endcapture %}
+      {% capture venue %}{% if entry.bookauthor %}{{ entry.bookauthor }}{% endif %}『{{ entry.booktitle }}』{% endcapture %}
       {% assign parts = parts | push: venue %}
       {% if entry.publisher %}{% assign parts = parts | push: entry.publisher %}{% endif %}
       {% if entry.pages %}{% assign pages = entry.pages | replace: '--', '–' | append: '頁' %}{% assign parts = parts | push: pages %}{% endif %}

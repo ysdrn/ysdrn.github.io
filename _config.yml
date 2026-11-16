@@ -291,6 +291,9 @@ scholar:
   query: "@*"
   group_by: year
   group_order: descending
+  # 年の中も月の新しい順（同じ年月は bib の順。_plugins/scholar_stable_sort.rb）
+  sort_by: year,month
+  order: descending,descending
 
 enable_publication_badges:
   altmetric: false
