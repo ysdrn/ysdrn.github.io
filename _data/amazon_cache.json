@@ -16,6 +16,14 @@
       "image": "https://m.media-amazon.com/images/I/81ZXn4djuXL._SL500_.jpg",
       "fetched_at": "2026-11-04"
     },
+    "4326103302": {
+      "asin": "4326103302",
+      "url": "https://www.amazon.co.jp/dp/4326103302",
+      "title": "新装版 コウモリであるとはどのようなことか",
+      "author": "トマス・ネーゲル、永井 均",
+      "image": "https://m.media-amazon.com/images/I/516F75FfLwL._SL500_.jpg",
+      "fetched_at": "2026-11-16"
+    },
     "4344987462": {
       "asin": "4344987462",
       "url": "https://www.amazon.co.jp/dp/4344987462",
@@ -23,6 +31,30 @@
       "author": "三宅香帆",
       "image": "https://m.media-amazon.com/images/I/71M5ts6e4FL._SL500_.jpg",
       "fetched_at": "2026-11-04"
+    },
+    "4480513760": {
+      "asin": "4480513760",
+      "url": "https://www.amazon.co.jp/dp/4480513760",
+      "title": "『ボヴァリー夫人』論〔増補決定版〕　上 (ちくま学芸文庫ハ-1-11)",
+      "author": "蓮實　重彦",
+      "image": "https://m.media-amazon.com/images/I/616Z7luHOvL._SL500_.jpg",
+      "fetched_at": "2026-11-16"
+    },
+    "4480513779": {
+      "asin": "4480513779",
+      "url": "https://www.amazon.co.jp/dp/4480513779",
+      "title": "『ボヴァリー夫人』論〔増補決定版〕　下 (ちくま学芸文庫ハ-1-12)",
+      "author": "蓮實　重彦",
+      "image": "https://m.media-amazon.com/images/I/61iJg8ndYYL._SL500_.jpg",
+      "fetched_at": "2026-11-16"
+    },
+    "4766431219": {
+      "asin": "4766431219",
+      "url": "https://www.amazon.co.jp/dp/4766431219",
+      "title": "死の形而上学：この世界からいなくなることについて",
+      "author": "吉沢文武、柏端達也",
+      "image": "https://m.media-amazon.com/images/I/611cB2LKF7L._SL500_.jpg",
+      "fetched_at": "2026-11-16"
     },
     "4911149019": {
       "asin": "4911149019",
@@ -68,6 +100,14 @@
       "author": "栗原裕一郎",
       "image": "https://m.media-amazon.com/images/I/61uxWw5RcnL._SL500_.jpg",
       "fetched_at": "2026-11-04"
+    },
+    "B07V5LZWZJ": {
+      "asin": "B07V5LZWZJ",
+      "url": "https://www.amazon.co.jp/dp/B07V5LZWZJ",
+      "title": "ゆりでなる♡えすぽわーる（１）【電子限定特典ペーパー付き】 (RYU COMICS)",
+      "author": "なおいまい",
+      "image": "https://m.media-amazon.com/images/I/91ojLtSAXPL._SL500_.jpg",
+      "fetched_at": "2026-11-16"
     },
     "B096FQ6KTD": {
       "asin": "B096FQ6KTD",
@@ -117,6 +157,21 @@
       "title": "ニトリ(NITORI) ドリップカップ フッ素付き 350ml ブラック 8944235",
       "image": "https://m.media-amazon.com/images/I/41ekgWhzLvL._SL500_.jpg",
       "fetched_at": "2026-11-04"
+    },
+    "B0DQC8876B": {
+      "asin": "B0DQC8876B",
+      "url": "https://www.amazon.co.jp/dp/B0DQC8876B",
+      "title": "デレク・パーフィット 哲学者が愛した哲学者 上",
+      "author": "デイヴィッド・エドモンズ、森村進、森村たまき",
+      "image": "https://m.media-amazon.com/images/I/819Fjj-5cwL._SL500_.jpg",
+      "fetched_at": "2026-11-16"
+    },
+    "B0HGKPQW4B": {
+      "asin": "B0HGKPQW4B",
+      "url": "https://www.amazon.co.jp/dp/B0HGKPQW4B",
+      "title": "REALFORCE RS1 キーボード 45g 有線 日本語配列 ブラック S1UJ11",
+      "image": "https://m.media-amazon.com/images/I/61UrSxfSePL._SL500_.jpg",
+      "fetched_at": "2026-11-16"
     }
   },
   "links": {
@@ -135,6 +190,13 @@
     "https://amzn.to/4ieIWSR": "B0BWGTYRTW",
     "https://amzn.to/4ihnjBl": "4911149019",
     "https://amzn.to/4kMl8aO": "B01H09CWNG",
-    "https://amzn.to/4kYv6WH": "B06WP1T6SR"
+    "https://amzn.to/4kYv6WH": "B06WP1T6SR",
+    "https://link.amazon/B01wrjCo9": "B0HGKPQW4B",
+    "https://link.amazon/B02J0uNZ5": "B07V5LZWZJ",
+    "https://link.amazon/B05L6YFGx": "4480513779",
+    "https://link.amazon/B05QmPGew": "4480513760",
+    "https://link.amazon/B0aYa1gUu": "B0DQC8876B",
+    "https://link.amazon/B0cJPozEU": "4766431219",
+    "https://link.amazon/B0f3QM1gs": "4326103302"
   }
 }
