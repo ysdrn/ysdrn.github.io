@@ -164,6 +164,10 @@
       them and uses Japanese bibliographic conventions: 『』 around journal and
       book titles instead of italics (Japanese has no italic), 第N号 / 頁 for
       number and pages, YYYY年M月 for the date, no English "In".
+      One shape per kind (2026-11-16): a journal piece (article, incl. reviews,
+      reports and translations) is 『誌名』巻(号), N–M頁 with no publisher (the
+      publisher stays in the BibTeX); a chapter (incollection) is 『書名』, 出版社,
+      N–M頁; a book is 出版社. Use these fields, not free-text howpublished.
     {%- endcomment -%}
     {% assign proceedings = 'inproceedings' | split: ',' %}
     {% assign collections = 'incollection,inbook' | split: ',' %}
@@ -173,15 +177,14 @@
       {% capture venue %}『{{ entry.journal }}』{% if entry.volume %}{{ entry.volume }}{% if entry.number %}({{ entry.number }}){% endif %}{% elsif entry.number %}第{{ entry.number }}号{% endif %}{% endcapture %}
       {% assign parts = parts | push: venue %}
       {% if entry.pages %}{% assign pages = entry.pages | replace: '--', '–' | append: '頁' %}{% assign parts = parts | push: pages %}{% endif %}
-      {% if entry.publisher %}{% assign parts = parts | push: entry.publisher %}{% endif %}
     {% elsif proceedings contains entry.type %}
       {% capture venue %}{{ entry.booktitle }}{% if entry.address %}（{{ entry.address }}）{% endif %}{% endcapture %}
       {% assign parts = parts | push: venue %}
     {% elsif collections contains entry.type %}
       {% capture venue %}『{{ entry.booktitle }}』{% endcapture %}
       {% assign parts = parts | push: venue %}
-      {% if entry.pages %}{% assign pages = entry.pages | replace: '--', '–' | append: '頁' %}{% assign parts = parts | push: pages %}{% endif %}
       {% if entry.publisher %}{% assign parts = parts | push: entry.publisher %}{% endif %}
+      {% if entry.pages %}{% assign pages = entry.pages | replace: '--', '–' | append: '頁' %}{% assign parts = parts | push: pages %}{% endif %}
     {% elsif entry.type == 'book' %}
       {% if entry.publisher %}{% assign parts = parts | push: entry.publisher %}{% endif %}
     {% elsif thesis contains entry.type %}
