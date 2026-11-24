@@ -559,3 +559,40 @@ h1, h2, h3, h4, h5, h6, .navbar, .btn {
 h1, h2, h3, h4, h5, h6 {
   font-weight: 500;
 }
+
+// フッター（2026-11-24）: 画面の下に固定せず（_config.yml の footer_fixed: false）、ページの一番下に置く。
+// 見た目は固定していたとき（テーマの footer.fixed-bottom）と同じ細い帯。
+// 本文の短いページでもフッターが画面の下端に来るよう、body を縦の flex にして本文の枠を伸ばす。
+body.sticky-bottom-footer {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  > [role="main"] {
+    flex: 1 0 auto;
+    width: 100%;
+    padding-bottom: 3rem;
+  }
+}
+
+footer.page-footer {
+  background-color: var(--global-footer-bg-color);
+  font-size: 0.75rem;
+
+  .container {
+    color: var(--global-footer-text-color);
+    padding-top: 9px;
+    padding-bottom: 8px;
+    text-align: center;
+  }
+
+  a {
+    color: var(--global-footer-link-color);
+
+    &:hover {
+      color: var(--global-theme-color);
+      text-decoration: none;
+    }
+  }
+}

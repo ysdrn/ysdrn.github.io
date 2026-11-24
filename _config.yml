@@ -68,7 +68,7 @@ al_folio:
 # -----------------------------------------------------------------------------
 
 navbar_fixed: true
-footer_fixed: true
+footer_fixed: false # 2026-11-24: 画面の下に固定しない。ページの一番下に置く（_includes/footer.liquid・main.scss の footer.page-footer）
 search_enabled: true
 socials_in_search: false
 posts_in_search: true
